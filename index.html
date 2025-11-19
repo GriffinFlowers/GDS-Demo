@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop Prototype</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  
+</head>
+<body>
+  <body>
+  <!-- TITLE SCREEN OVERLAY -->
+<div id="title-screen">
+  <img src="./assets/ui/title_screen.png" id="title-img" alt="Title Screen">
+  <button id="title-play-btn">Play Game</button>
+  <button id="btn-explanation" class="title-btn">Explanation</button>
+
+</div>
+<div id="explanation-screen" class="hidden">
+  <img
+    id="explanation-bg"
+    src="./assets/ui/explanation_page.png"
+    alt="Explanation Page"
+  />
+</div>
+
+
+  <div class="frame">
+    <!-- existing monitor + windows here -->
+
+  <div class="frame">
+    <!-- Monitor background image -->
+    <img class="monitor" src="./assets/ui/computer_base.png" alt="computer base" />
+
+    <!-- The 'screen' area where desktop icons live -->
+    <div class="screen" id="screen">
+      <div class="dock">
+       <button class="icon" data-open="#win-design">
+  <img src="./assets/ui/design_app_icon.png" alt="Design App">
+  <span class="icon-label">Design</span>
+</button>
+
+<button class="icon" data-open="#win-web">
+  <img src="./assets/ui/web_app_icon.png" alt="Web App">
+  <span class="icon-label">Web Search</span>
+</button>
+
+<button class="icon" data-open="#win-email">
+  <img src="./assets/ui/email_app_icon.png" alt="Email App">
+  <span class="icon-label">Zoomi Mail</span>
+</button>
+
+
+        <button class="icon" data-open="#win-cash"><span>Cash</span></button>
+        <button class="icon" data-open="#win-briefs"><span>Briefs</span></button>
+        <button class="icon" data-open="#win-notes"><span>Notes</span></button>
+        <button class="icon" data-open="#win-commissions"><span>Commissions</span></button>
+        <button class="icon" data-open="#win-cash"><span>Cash</span></button>
+
+        <!-- Email -->
+        <div class="win hidden" id="win-email">
+          <div class="titlebar">
+            <div class="btn btn-close" data-close></div>
+            <div class="btn btn-min" data-min></div>
+            <div class="btn btn-max" data-max></div>
+            <div class="title">Email</div>
+          </div>
+          <div class="content">
+            <div id="email-app">
+              <aside>
+                <div class="email-header">
+                  <h1 class="email-inbox-title">Inbox</h1>
+                </div>
+                <div id="m-list"></div>
+              </aside>
+
+              <main>
+                <!-- header hidden with CSS but kept for structure -->
+                <div class="email-main-header">
+                  <div id="m-subj">(no message selected)</div>
+                </div>
+
+                <div class="email-main-body">
+                  <div id="m-meta"></div>
+                  <div id="m-body" style="white-space:pre-wrap;"></div>
+                  <div id="m-actions"></div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design window -->
+      <div class="win hidden" id="win-design">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title"> Terracotta Design</div>
+        </div>
+        <div class="content">
+          <div class="design-shell">
+            <!-- LEFT TOOL BAR -->
+            <aside class="tool-panel">
+              <button id="pen"    class="tool-btn active">Pen</button>
+              <button id="bucket" class="tool-btn">Paint Bucket</button>
+
+              <button id="type"   class="tool-btn">Text</button>
+              <button id="eraser" class="tool-btn">Erase</button>
+
+              <button id="shape"  class="tool-btn">Shape</button>
+              <button id="open-assets" class="tool-btn">Asset</button>
+
+              <button id="line"   class="tool-btn">Line</button>
+              <button id="move"   class="tool-btn">Move</button>
+
+              <button id="undo"   class="tool-btn">Undo</button>
+              <button id="picker" class="tool-btn">Eye dropper</button>
+
+              <button id="clear"  class="tool-btn">Trash</button>
+              <button id="upload" class="tool-btn">Upload</button>
+
+              <!-- keep save button for Ctrl+S export but hide it -->
+              <button id="savepng" style="display:none;">Save PNG</button>
+            </aside>
+
+            <!-- CENTER: SIZE SLIDER + CANVAS -->
+            <main class="design-center">
+              <div class="size-bar">
+                <span class="size-label">Size</span>
+                <input id="size" type="range" min="1" max="70" value="32">
+              </div>
+
+              <div class="canvas-frame">
+                <canvas id="canvas" width="1280" height="720"></canvas>
+              </div>
+            </main>
+
+            <!-- RIGHT: TYPEFACE + COLOR PANELS -->
+            <aside class="right-panel">
+              <section class="panel typeface-panel">
+                <div class="panel-header">Typeface</div>
+                <div class="typeface-body">
+                  <button id="font-prev" class="font-scroll">▲</button>
+                  <span id="font-name" class="font-label">Arial</span>
+                  <button id="font-next" class="font-scroll">▼</button>
+                </div>
+              </section>
+
+              <section class="panel color-panel">
+                <div class="panel-header">Color</div>
+                <div class="color-body">
+                  <div class="swatch-grid">
+                    <!-- top row -->
+                    <button class="swatch" data-color="#e53935"></button>
+                    <button class="swatch" data-color="#fb8c00"></button>
+                    <button class="swatch" data-color="#fdd835"></button>
+                    <button class="swatch" data-color="#43a047"></button>
+                    <!-- row 2 -->
+                    <button class="swatch" data-color="#1e88e5"></button>
+                    <button class="swatch" data-color="#039be5"></button>
+                    <button class="swatch" data-color="#8e24aa"></button>
+                    <button class="swatch" data-color="#6d4c41"></button>
+                    <!-- row 3 -->
+                    <button class="swatch" data-color="#8d6e63"></button>
+                    <button class="swatch" data-color="#b0bec5"></button>
+                    <button class="swatch" data-color="#ffffff"></button>
+                    <button class="swatch" data-color="#000000"></button>
+                  </div>
+
+                  <!-- hidden native color input so existing JS still works -->
+                  <input type="color" id="color" value="#000000" style="display:none;">
+                </div>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <!-- Web window -->
+      <div class="win hidden" id="win-web">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Web</div>
+        </div>
+
+        <div class="content web-shell">
+          <!-- Fake browser tab bar -->
+          <div class="web-tabbar">
+            <button id="web-back" class="web-back hidden">◀ Back</button>
+            <div class="web-tab active" id="web-tab-title">New tab</div>
+          </div>
+
+          <!-- “Browser” viewport -->
+          <div class="web-view">
+            <!-- HOME PAGE (Web app.png style) -->
+            <section id="web-home" class="web-page">
+              <div class="web-logo-row">
+                <div class="web-logo-circle">🌐</div>
+              </div>
+
+              <div class="web-search-row">
+                <div class="web-search-box">
+                  <input
+                    id="web-search-input"
+                    type="text"
+                    placeholder="Search"
+                    autocomplete="off"
+                  />
+                  <button id="web-search-btn" class="web-search-icon">🔍</button>
+                </div>
+              </div>
+
+              <div class="web-suggest-title">Suggested Search</div>
+
+              <div class="web-suggest-row">
+                <button class="web-suggest" data-web-search="client">
+                  client research
+                </button>
+                <button class="web-suggest" data-web-search="principles">
+                  principles of design
+                </button>
+                <button class="web-suggest" data-web-search="color">
+                  color theory
+                </button>
+              </div>
+            </section>
+
+            <!-- PRINCIPLES PAGE -->
+            <section id="web-principles" class="web-page hidden">
+              <div class="web-img-wrap">
+                <img
+                  src="./assets/ui/principles_of_design.png"
+                  alt="Principles of design"
+                  class="web-img-full"
+                />
+              </div>
+            </section>
+
+            <!-- COLOR THEORY PAGE -->
+            <section id="web-color" class="web-page hidden">
+              <div class="web-img-wrap">
+                <img
+                  src="./assets/ui/color_theory_page.png"
+                  alt="Color Theory"
+                  class="web-img-full"
+                />
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Briefs placeholder -->
+      <div class="win hidden" id="win-briefs">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max"></div>
+          <div class="title">Briefs (placeholder)</div>
+        </div>
+        <div class="content">
+          <div class="content">
+            <div id="briefs-list" class="briefs-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="win hidden" id="win-notes">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Notes (placeholder)</div>
+        </div>
+        <div class="content">
+          <textarea placeholder="Write notes..."></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Asset Browser window -->
+    <div class="win hidden" id="win-asset-browser">
+      <div class="titlebar">
+        <div class="btn btn-close" data-close></div>
+        <div class="btn btn-min" data-min></div>
+        <div class="btn btn-max" data-max></div>
+        <div class="title">Assets</div>
+      </div>
+      <div class="content">
+        <div id="asset-toolbar" class="asset-toolbar">
+          <input id="asset-filter" type="search" placeholder="Filter assets..." />
+        </div>
+        <div id="asset-grid" class="asset-grid"></div>
+        <div class="muted" style="margin-top:8px;">Tip: click an asset to place it in the canvas.</div>
+      </div>
+    </div>
+  </div>
+    
+
+  <!-- Commissions -->
+  <div class="win hidden" id="win-commissions">
+    <div class="titlebar">
+      <div class="btn btn-close" data-close></div>
+      <div class="btn btn-min" data-min></div>
+      <div class="btn btn-max" data-max></div>
+      <div class="title">Commissions</div>
+    </div>
+    <div class="content">
+      <div id="commissions-app" style="display:flex; width:100%;">
+        <aside style="width:220px; border-right:1px solid #1e2b4d; padding:10px;">
+          <div style="font-weight:700; margin-bottom:8px;">Filters</div>
+          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-open" type="checkbox" checked> Open</label>
+          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-acc"  type="checkbox" checked> Accepted</label>
+          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-done" type="checkbox" checked> Done</label>
+          <hr />
+          <button id="c-new">+ New Mock Brief</button>
+        </aside>
+        <main style="flex:1; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:10px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <strong>Commissions</strong>
+              <span id="c-count" class="tag"></span>
+            </div>
+            <input id="c-search" type="search" placeholder="Search…" />
+          </div>
+          <div id="c-list" style="padding:10px; display:flex; flex-direction:column; gap:8px; overflow:auto;"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash Tracker -->
+  <div class="win hidden" id="win-cash">
+    <div class="titlebar">
+      <div class="btn btn-close" data-close></div>
+      <div class="btn btn-min" data-min></div>
+      <div class="btn btn-max" data-max></div>
+      <div class="title">Cash Tracker</div>
+    </div>
+    <div class="content">
+      <div id="cash-app" style="display:flex; width:100%;">
+        <aside style="width:260px; border-right:1px solid #1e2b4d; padding:10px; display:flex; flex-direction:column; gap:10px;">
+          <div style="font-weight:700;">Actions</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label>New expense</label>
+            <input id="cash-exp-label" placeholder="Label (e.g. Rent, Fonts)" />
+            <input id="cash-exp-amt" type="number" placeholder="Amount" />
+            <button id="cash-add-exp">Add Expense</button>
+          </div>
+          <hr />
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label>Quick expenses</label>
+            <button data-qexp="Rent:300">Pay Rent ($300)</button>
+            <button data-qexp="Coffee:6">Coffee ($6)</button>
+            <button data-qexp="Stock photos:25">Stock photos ($25)</button>
+          </div>
+          <hr />
+          <button id="cash-reset">Reset Save</button>
+        </aside>
+        <main style="flex:1; display:flex; flex-direction:column;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <strong>Balance</strong>
+              <span id="cash-balance" class="tag"></span>
+            </div>
+            <button id="cash-add-income">Add Test Income</button>
+          </div>
+          <div style="padding:10px; display:flex; flex-direction:column; gap:10px; overflow:auto;">
+            <strong>Recent Activity</strong>
+            <div id="cash-history" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialogue overlay -->
+  <div id="dialogue-layer" class="dialogue hidden">
+    <div class="dialogue-inner">
+      <img
+        src="./assets/ui/dialouge_box.png"
+        alt="Dialogue box"
+        class="dialogue-frame"
+      />
+
+      <div class="dialogue-face-wrap">
+        <img
+          id="dialogue-face"
+          src="./assets/ui/IMG_0211.jpg"
+          alt="Griffin portrait"
+          class="dialogue-face"
+        />
+      </div>
+
+      <div class="dialogue-text-wrap">
+        <div id="dialogue-name" class="dialogue-name">Griffin Flowers</div>
+        <div id="dialogue-text" class="dialogue-text"></div>
+        <div class="dialogue-hint">click to continue</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- core scripts -->
+  <script src="./js/app.js"></script>
+ 
+  <script src="./js/assets_browser.js"></script>
+  <script src="./js/briefs.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/commissions.js"></script>
+  <script src="./js/email.js"></script>
+  <script src="./js/cash.js"></script>
+
+  <!-- Type tool + fallback renderer + magazine mode -->
+  <!-- Type tool + fallback renderer + magazine mode -->
+<script>
+(function(){
+  const root   = document.getElementById('win-design');
+  const canvas = document.getElementById('canvas');
+  if (!root || !canvas) return;
+
+  const FONTS = ['Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New', 'Trebuchet MS', 'Times New Roman'];
+  let fontIndex = 0;
+
+  const fontPrev = document.getElementById('font-prev');
+  const fontNext = document.getElementById('font-next');
+  const fontName = document.getElementById('font-name');
+  const typeBtn  = document.getElementById('type');
+  const colorEl  = document.getElementById('color');
+  const sizeEl   = document.getElementById('size');
+
+  if (sizeEl) {
+    sizeEl.addEventListener('input', () => {
+      const newSize = Number(sizeEl.value || 16);
+      const hot = window.__designHot;
+      if (!hot || !hot.textItems) return;
+      hot.textItems.forEach(t => {
+        if (t.selected) {
+          t.size = newSize;
+        }
+      });
+    });
+  }
+
+  if (fontName) fontName.textContent = FONTS[fontIndex];
+
+  if (!window.__designHot) window.__designHot = {};
+  const hot = window.__designHot;
+
+  if (!hot.booted) {
+    const view = canvas.getContext('2d', {alpha:true});
+
+    // Create the initial offscreen paint layer
+    const paint = document.createElement('canvas');
+    paint.width = canvas.width;
+    paint.height = canvas.height;
+    const pctx = paint.getContext('2d');
+    pctx.fillStyle = '#faf8e8';
+    pctx.fillRect(0, 0, paint.width, paint.height);
+
+    hot.view  = view;
+hot.paint = paint;
+hot.pctx  = pctx;
+
+hot.tool         = hot.tool || 'pen';
+hot.stickers     = hot.stickers || [];
+hot.textItems    = hot.textItems || [];
+hot.typing       = hot.typing || null;
+hot.linePreview  = hot.linePreview || null;   // line drag preview
+hot.shapePreview = hot.shapePreview || null;  // shape drag preview
+hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
+
+    function drawTextItem(ctx, t, isPreview=false){
+      ctx.save();
+      ctx.fillStyle = t.color;
+      ctx.textBaseline = 'top';
+      ctx.font = `${t.size}px "${t.font}"`;
+      ctx.fillText(t.text, t.x, t.y);
+      if (!isPreview) {
+        const m = ctx.measureText(t.text);
+        t.w = m.width;
+        t.h = t.size * 1.2;
+      }
+      if (t.selected && !isPreview){
+        ctx.strokeStyle = '#7bdcff';
+        ctx.setLineDash([6,4]);
+        ctx.lineWidth   = 1.5;
+        ctx.strokeRect(t.x-4, t.y-2, (t.w||0)+8, (t.h||t.size*1.2)+4);
+      }
+      ctx.restore();
+    }
+
+    hot.clearPaint = function(){
+      pctx.fillStyle = '#faf8e8';
+      pctx.fillRect(0, 0, paint.width, paint.height);
+    };
+
+    let drawing = false;
+    let last    = null;
+
+    canvas.addEventListener('mousedown', (e)=>{
+      const {x,y} = canvasXY(e);
+      const active = hot.tool;
+
+      if (active==='move'){
+        const t = hitText(x,y);
+        const s = t ? null : hitSticker(x,y);
+        hot.textItems.forEach(a=>a.selected=false);
+        hot.stickers.forEach(a=>a.selected=false);
+        if (t){
+          t.selected = true;
+          hot.dragTarget = t;
+          hot.dragOff    = {x: x - t.x, y: y - t.y};
+        } else if (s){
+          s.selected = true;
+          const {cx,cy} = stickerCenter(s);
+          hot.dragTarget = s;
+          hot.dragOff    = {x: x - cx, y: y - cy};
+        } else {
+          hot.dragTarget = null;
+        }
+        return;
+      }
+
+      if (active==='type'){
+        hot.typing = {x, y, text: ''};
+        return;
+      }
+
+      if (active==='bucket'){
+        floodFill(x,y, hexToRgba(colorEl?.value || '#ffffff'));
+        return;
+      }
+      if (active==='picker'){
+        const c = hot.view.getImageData(x,y,1,1).data;
+        if(colorEl) {
+          colorEl.value = `#${[c[0],c[1],c[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+        }
+        return;
+      }
+       if (active === 'shape') {
+      hot.shapePreview = { x1:x, y1:y, x2:x, y2:y };
+      return; // don't start freehand drawing
+    }
+
+      if (active === 'line') {
+    hot.linePreview = { x1:x, y1:y, x2:x, y2:y };
+    return; // don't start freehand drawing
+  }
+      drawing = true;
+      last    = {x,y};
+      drawDot(x,y, curColor(), curSize());
+    });
+
+     window.addEventListener('mouseup', ()=>{
+      drawing = false;
+      hot.dragTarget = null;
+
+      // ✅ Commit line to paint
+      if (hot.linePreview) {
+        const lp = hot.linePreview;
+        drawLine(lp.x1, lp.y1, lp.x2, lp.y2, curColor(), curSize());
+        hot.linePreview = null;
+      }
+
+      // ✅ Commit shape to paint
+      if (hot.shapePreview) {
+        const sp = hot.shapePreview;
+        let x1 = sp.x1, y1 = sp.y1, x2 = sp.x2, y2 = sp.y2;
+        let left = Math.min(x1, x2);
+        let top  = Math.min(y1, y2);
+        let w    = Math.abs(x2 - x1);
+        let h    = Math.abs(y2 - y1);
+
+        if (w > 0 && h > 0) {
+          const ctx = hot.pctx;
+          ctx.save();
+          ctx.fillStyle = curColor();
+          ctx.beginPath();
+          if (hot.shapeMode === 'circle') {
+            const cx = left + w / 2;
+            const cy = top  + h / 2;
+            const rx = w / 2;
+            const ry = h / 2;
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+          } else {
+            ctx.rect(left, top, w, h);
+          }
+          ctx.fill();
+          ctx.restore();
+        }
+
+        hot.shapePreview = null;
+      }
+    });
+
+
+    canvas.addEventListener('mousemove', (e)=>{
+      const {x,y}=canvasXY(e);
+      if (hot.dragTarget){
+        const t = hot.dragTarget;
+        if ('text' in t){
+          t.x = x - hot.dragOff.x;
+          t.y = y - hot.dragOff.y;
+          return;
+        } else {
+          t.x = x - hot.dragOff.x;
+          t.y = y - hot.dragOff.y;
+          return;
+        }
+      }
+            // ✅ SHAPE preview: rubber-band rectangle/ellipse
+      if (hot.tool === 'shape' && hot.shapePreview) {
+        const sp = hot.shapePreview;
+        const x1 = sp.x1;
+        const y1 = sp.y1;
+        let x2 = x;
+        let y2 = y;
+
+        // Hold Shift to constrain to perfect square/circle
+        if (e.shiftKey) {
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const size = Math.max(Math.abs(dx), Math.abs(dy)) || 1;
+          const signX = dx >= 0 ? 1 : -1;
+          const signY = dy >= 0 ? 1 : -1;
+          x2 = x1 + signX * size;
+          y2 = y1 + signY * size;
+        }
+
+        sp.x2 = x2;
+        sp.y2 = y2;
+        return;
+      }
+
+      // ✅ LINE preview: rubber-band line
+      if (hot.tool === 'line' && hot.linePreview) {
+        hot.linePreview.x2 = x;
+        hot.linePreview.y2 = y;
+        return;
+      }
+
+      if(!drawing) return;
+
+      // ✅ If we're in line mode and have a preview, update the end point
+  if (hot.tool === 'line' && hot.linePreview) {
+    hot.linePreview.x2 = x;
+    hot.linePreview.y2 = y;
+    return;
+  }
+      if(!drawing) return;
+      drawLine(last.x,last.y,x,y, curColor(), curSize());
+      last = {x,y};
+    });
+
+    window.addEventListener('keydown', (e)=>{
+      if (!hot.typing) {
+        if (e.key.toLowerCase()==='t'){ setTool('type'); }
+        return;
+      }
+      if (e.key==='Enter'){
+        const item = {
+          x: hot.typing.x, y: hot.typing.y, text: hot.typing.text,
+          font: FONTS[fontIndex], size: Number(sizeEl?.value || 16),
+          color: colorEl?.value || '#ffffff',
+          selected:false, w:0, h:0
+        };
+        hot.textItems.push(item);
+        hot.typing = null;
+        return;
+      }
+      if (e.key==='Escape'){
+        hot.typing = null;
+        return;
+      }
+      if (e.key==='Backspace'){
+        e.preventDefault();
+        hot.typing.text = (hot.typing.text||'').slice(0,-1);
+        return;
+      }
+      if (e.key.length===1){
+        hot.typing.text = (hot.typing.text||'') + e.key;
+      }
+    });
+
+    function canvasXY(e){
+      const r = canvas.getBoundingClientRect();
+      return {
+        x: Math.floor((e.clientX - r.left) * (canvas.width  / r.width)),
+        y: Math.floor((e.clientY - r.top)  * (canvas.height / r.height))
+      };
+    }
+    function curColor(){
+      return (hot.tool==='eraser') ? '#faf8e8' : (colorEl?.value || '#000000');
+    }
+    function curSize(){
+      return Number(sizeEl?.value || 3);
+    }
+    function drawDot(x,y,color,size){
+      hot.pctx.fillStyle = color;
+      hot.pctx.beginPath();
+      hot.pctx.arc(x,y,size,0,Math.PI*2);
+      hot.pctx.fill();
+    }
+    function drawLine(x1,y1,x2,y2,color,size){
+      hot.pctx.strokeStyle = color;
+      hot.pctx.lineWidth   = size*2;
+      hot.pctx.lineCap     = 'round';
+      hot.pctx.beginPath();
+      hot.pctx.moveTo(x1,y1);
+      hot.pctx.lineTo(x2,y2);
+      hot.pctx.stroke();
+    }
+    function hexToRgba(hex){
+      hex = hex.replace('#','');
+      if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+      return [
+        parseInt(hex.slice(0,2),16),
+        parseInt(hex.slice(2,4),16),
+        parseInt(hex.slice(4,6),16),
+        255
+      ];
+    }
+    function floodFill(x,y,newCol){
+      const img = hot.pctx.getImageData(0,0,hot.paint.width,hot.paint.height);
+      const d=img.data, w=hot.paint.width, h=hot.paint.height;
+      const idx=(x,y)=>(y*w+x)*4;
+      const s=idx(x,y);
+      const tgt=[d[s],d[s+1],d[s+2]];
+      if(tgt[0]===newCol[0]&&tgt[1]===newCol[1]&&tgt[2]===newCol[2]) return;
+      const stack=[[x,y]];
+      while(stack.length){
+        const [cx,cy]=stack.pop();
+        if(cx<0||cy<0||cx>=w||cy>=h) continue;
+        const i=idx(cx,cy);
+        if(d[i]===tgt[0]&&d[i+1]===tgt[1]&&d[i+2]===tgt[2]){
+          d[i]=newCol[0]; d[i+1]=newCol[1]; d[i+2]=newCol[2]; d[i+3]=255;
+          stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+        }
+      }
+      hot.pctx.putImageData(img,0,0);
+    }
+    function hitSticker(x,y){
+      for(let i=hot.stickers.length-1;i>=0;i--){
+        const s=hot.stickers[i];
+        const cw=s.w*s.scale, ch=s.h*s.scale;
+        const left=s.x - cw/2, top=s.y - ch/2;
+        if (x>=left && x<=left+cw && y>=top && y<=top+ch) return s;
+      }
+      return null;
+    }
+    function stickerCenter(s){
+      return {cx:s.x, cy:s.y};
+    }
+    function hitText(x,y){
+      for(let i=hot.textItems.length-1;i>=0;i--){
+        const t=hot.textItems[i];
+        const w=t.w||0, h=t.h||t.size*1.2;
+        if (x>=t.x-2 && x<=t.x+w+2 && y>=t.y-2 && y<=t.y+h+2) return t;
+      }
+      return null;
+    }
+
+    function render() {
+      view.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (hot.paint) {
+        view.drawImage(hot.paint, 0, 0);
+      }
+
+      for (const s of hot.stickers) {
+        const cw = s.w * s.scale, ch = s.h * s.scale;
+        const x = s.x - cw / 2,   y = s.y - ch / 2;
+        view.drawImage(s.img, x, y, cw, ch);
+        if (s.selected) {
+          view.save();
+          view.strokeStyle = '#7bdcff';
+          view.setLineDash([6, 4]);
+          view.lineWidth = 2;
+          view.strokeRect(x, y, cw, ch);
+          view.restore();
+        }
+      }
+
+      for (const t of hot.textItems) drawTextItem(view, t);
+
+      if (hot.typing) {
+        const preview = {
+          x: hot.typing.x,
+          y: hot.typing.y,
+          text: hot.typing.text || '',
+          font: FONTS[fontIndex],
+          size: Number(sizeEl?.value || 16),
+          color: colorEl?.value || '#ffffff',
+          selected: false
+        };
+        drawTextItem(view, preview, true);
+        view.save();
+        view.fillStyle = preview.color;
+        const w = view.measureText(preview.text).width;
+        view.fillRect(preview.x + w + 1, preview.y, 1, preview.size * 1.2);
+        view.restore();
+      }
+// At the end of render(), before requestAnimationFrame(render):
+      // ✅ SHAPE preview overlay
+      if (hot.shapePreview) {
+        const sp  = hot.shapePreview;
+        const ctx = hot.view;
+        let x1 = sp.x1, y1 = sp.y1, x2 = sp.x2, y2 = sp.y2;
+        let left = Math.min(x1, x2);
+        let top  = Math.min(y1, y2);
+        let w    = Math.abs(x2 - x1);
+        let h    = Math.abs(y2 - y1);
+
+        ctx.save();
+        ctx.strokeStyle = colorEl?.value || '#000000';
+        ctx.lineWidth   = Number(sizeEl?.value || 3) * 2;
+        ctx.setLineDash([4,4]);
+        ctx.beginPath();
+        if (hot.shapeMode === 'circle') {
+          const cx = left + w / 2;
+          const cy = top  + h / 2;
+          const rx = w / 2;
+          const ry = h / 2;
+          ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        } else {
+          ctx.rect(left, top, w, h);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // ✅ LINE preview overlay
+      if (hot.linePreview) {
+        const lp = hot.linePreview;
+        const ctx = hot.view;
+        ctx.save();
+        ctx.strokeStyle = colorEl?.value || '#000000';
+        ctx.lineWidth   = Number(sizeEl?.value || 3) * 2;
+        ctx.lineCap     = 'round';
+        ctx.setLineDash([4,4]);
+        ctx.beginPath();
+        ctx.moveTo(lp.x1, lp.y1);
+        ctx.lineTo(lp.x2, lp.y2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    hot.booted = true;
+  }
+
+  // === Magazine mode helper ===
+   window.setMagazineMode = function(enabled){
+  const canvas = document.getElementById('canvas');
+  const hot    = window.__designHot;
+  if (!canvas || !hot) return;
+
+  // INTERNAL resolution
+  const W = enabled ? 500 : 1280;
+  const H = enabled ? 800 : 720;
+
+  // Resize internal pixel buffer
+  canvas.width  = W;
+  canvas.height = H;
+
+  // Resize visible CSS box
+  if (enabled) {
+    canvas.style.width  = '500px';
+    canvas.style.height = '800px';
+  } else {
+    // normal design mode size — adjust if you'd like
+    canvas.style.width  = '900px';
+    canvas.style.height = '500px';
+  }
+
+  // Resize offscreen paint canvas
+  let paint = hot.paint;
+  if (!paint) {
+    paint = document.createElement('canvas');
+    hot.paint = paint;
+  }
+  paint.width  = W;
+  paint.height = H;
+
+  const pctx = paint.getContext('2d');
+  pctx.fillStyle = '#faf8e8';
+  pctx.fillRect(0, 0, W, H);
+
+  hot.pctx = pctx;
+};
+
+
+
+
+function setTool(name){
+  hot.tool = name;
+  const ids = ['pen','bucket','type','eraser','shape','open-assets','line','move','undo','picker','clear','upload'];
+  ids.forEach(id=>{
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const toolName =
+      id === 'pen'   ? 'pen'   :
+      id === 'bucket'? 'bucket':
+      id === 'type'  ? 'type'  :
+      id === 'eraser'? 'eraser':
+      id === 'picker'? 'picker':
+      id === 'move'  ? 'move'  :
+      id === 'line'  ? 'line'  :
+      id === 'shape' ? 'shape' :
+      null;
+    btn.classList.toggle('active', toolName === name);
+  });
+}
+
+
+
+  document.getElementById('pen')   ?.addEventListener('click', ()=> setTool('pen'));
+  document.getElementById('eraser')?.addEventListener('click', ()=> setTool('eraser'));
+  document.getElementById('bucket')?.addEventListener('click', ()=> setTool('bucket'));
+  document.getElementById('picker')?.addEventListener('click', ()=> setTool('picker'));
+  document.getElementById('move')  ?.addEventListener('click', ()=> setTool('move'));
+  document.getElementById('line')  ?.addEventListener('click', ()=> setTool('line'));
+  typeBtn?.addEventListener('click', ()=> setTool('type'));
+  window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='t') setTool('type'); });
+const shapeBtn = document.getElementById('shape');
+shapeBtn?.addEventListener('click', ()=>{
+  // Small popup to choose between circle or square
+  const choice = window.prompt(
+    'Choose shape:\n- type "c" for circle/ellipse\n- type "s" for square/rectangle',
+    'c'
+  );
+
+  if (choice && choice.toLowerCase().startsWith('c')) {
+    hot.shapeMode = 'circle';
+  } else {
+    hot.shapeMode = 'rect';
+  }
+
+  setTool('shape');
+});
+
+  function updateFontLabel(){
+    if(fontName) fontName.textContent = (window.__designHotFont || 'Arial');
+  }
+  window.__designHotFont = FONTS[fontIndex];
+  updateFontLabel();
+
+  fontPrev?.addEventListener('click', ()=>{
+    fontIndex = (fontIndex - 1 + FONTS.length) % FONTS.length;
+    window.__designHotFont = FONTS[fontIndex];
+    updateFontLabel();
+  });
+  fontNext?.addEventListener('click', ()=>{
+    fontIndex = (fontIndex + 1) % FONTS.length;
+    window.__designHotFont = FONTS[fontIndex];
+    updateFontLabel();
+  });
+})();
+</script>
+
+  <!-- Sticker helpers -->
+  <script>
+  (function(){
+    window.addStickerImage = function(img){
+      const canvas = document.getElementById('canvas');
+      const hot = (window.__designHot ||= { stickers: [] });
+      const maxSide = 256;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      const s = Math.min(1, maxSide / Math.max(w, h));
+      w = Math.round(w * s); h = Math.round(h * s);
+      hot.stickers.push({
+        img, x: canvas.width/2, y: canvas.height/2,
+        w, h, scale: 1, selected: false
+      });
+      hot.tool = 'move';
+      document.getElementById('move')?.classList.add('active');
+      ['pen','eraser','bucket','picker','type']
+        .forEach(id => document.getElementById(id)?.classList.remove('active'));
+    };
+
+    window.addStickerFromURL = function(url){
+      const canvas = document.getElementById('canvas');
+      if(!canvas) return;
+      const img = new Image();
+      img.onload = () => window.addStickerImage(img);
+      img.onerror = () => {
+        alert(`I couldn't load ${url}. If you're opening the HTML with file://, use a local server (e.g. npx serve) so images load consistently.`);
+      };
+      img.src = url;
+    };
+  })();
+  </script>
+
+  <!-- Design UI wiring for new layout (including Upload completion trigger) -->
+  <!-- Design UI wiring for new layout (Upload = submit design only) -->
+<script>
+(function(){
+  const hot        = (window.__designHot ||= {});
+  const colorInput = document.getElementById('color');
+
+  // Color swatches -> hidden color input
+  document.querySelectorAll('.swatch').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const c = btn.dataset.color;
+      if (colorInput) colorInput.value = c;
+    });
+  });
+
+  // Clear: wipe canvas + remove stickers/text
+  document.getElementById('clear')?.addEventListener('click', ()=>{
+    const h = window.__designHot;
+    if (!h || !h.pctx || !h.paint) return;
+    h.pctx.fillStyle = '#faf8e8';
+    h.pctx.fillRect(0,0,h.paint.width,h.paint.height);
+    if (h.stickers)  h.stickers.length  = 0;
+    if (h.textItems) h.textItems.length = 0;
+  });
+
+  // Undo: last text OR last sticker
+  document.getElementById('undo')?.addEventListener('click', ()=>{
+    const h = window.__designHot;
+    if (!h) return;
+    if (h.textItems && h.textItems.length){
+      h.textItems.pop();
+      return;
+    }
+    if (h.stickers && h.stickers.length){
+      h.stickers.pop();
+      return;
+    }
+    alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
+  });
+
+  // Upload = submit design to client (no file upload)
+  (function(){
+    const uploadBtn = document.getElementById('upload');
+    if (!uploadBtn) return;
+
+    uploadBtn.addEventListener('click', () => {
+      // Pure "submit design" action – no file picker
+      if (
+        window.flowerHausJobActive &&
+        !window.flowerHausJobComplete &&
+        typeof window.startFlowerHausCompleteDialogue === 'function'
+      ) {
+        const ok = confirm('Submit this design to the client?');
+        if (ok) {
+          window.startFlowerHausCompleteDialogue();
+        }
+      } else {
+        alert('There is no active client brief to submit to yet.');
+      }
+    });
+  })();
+
+})();
+</script>
+
+
+  <!-- Web app logic (with color theory + back button) -->
+  <script>
+  (function(){
+    const homePage       = document.getElementById('web-home');
+    const principlesPage = document.getElementById('web-principles');
+    const colorPage      = document.getElementById('web-color');
+    const tabTitle       = document.getElementById('web-tab-title');
+    const searchInput    = document.getElementById('web-search-input');
+    const searchBtn      = document.getElementById('web-search-btn');
+    const backBtn        = document.getElementById('web-back');
+
+    if (!homePage || !principlesPage || !colorPage) return;
+
+    function showPage(name){
+      homePage.classList.add('hidden');
+      principlesPage.classList.add('hidden');
+      colorPage.classList.add('hidden');
+
+      if (name === 'principles') {
+        principlesPage.classList.remove('hidden');
+        tabTitle.textContent = 'Principles of design';
+        backBtn.classList.remove('hidden');
+      } else if (name === 'color') {
+        colorPage.classList.remove('hidden');
+        tabTitle.textContent = 'Color Theory';
+        backBtn.classList.remove('hidden');
+      } else {
+        homePage.classList.remove('hidden');
+        tabTitle.textContent = 'New tab';
+        backBtn.classList.add('hidden');
+      }
+    }
+
+    showPage('home');
+
+    document.querySelectorAll('.web-suggest').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const target = btn.getAttribute('data-web-search');
+        if (target === 'principles') {
+          showPage('principles');
+        } else if (target === 'color') {
+          showPage('color');
+        } else {
+          alert('That search result is coming soon – for now, "principles of design" and "color theory" are implemented.');
+        }
+      });
+    });
+
+    function runSearch(){
+      const q = (searchInput.value || '').toLowerCase();
+      if (!q) return;
+      if (q.includes('principle')) {
+        showPage('principles');
+      } else if (q.includes('color')) {
+        showPage('color');
+      } else {
+        alert('In this prototype, the Web app has pages for "principles of design" and "color theory".');
+      }
+    }
+
+    searchBtn?.addEventListener('click', runSearch);
+    searchInput?.addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter') runSearch();
+    });
+
+    backBtn?.addEventListener('click', ()=> showPage('home'));
+    tabTitle?.addEventListener('click', ()=> showPage('home'));
+
+    window.webShowHome = () => showPage('home');
+  })();
+  </script>
+
+  <!-- Flower Haus dialogue system -->
+  <script>
+  (function () {
+    const layer   = document.getElementById("dialogue-layer");
+    const faceImg = document.getElementById("dialogue-face");
+    const textEl  = document.getElementById("dialogue-text");
+    const nameEl  = document.getElementById("dialogue-name");
+
+    if (!layer || !faceImg || !textEl || !nameEl) return;
+
+    const FLOWER_HAUS_BRIEF_DIALOGUE = [
+      {
+        face: "./assets/ui/IMG_0211.jpg",
+        text:
+          "Hey! Thanks for accepting my brief. I know its short notice but this magazine is my love letter to Graphic Design and I need it to be perfect."
+      },
+      {
+        face: "./assets/ui/IMG_0212.jpg",
+        text:
+          "I want the cover to have a calm soothing color scheme, maybe analogous colors? Think strong hierarchy too: Flower Haus needs to read first, then the issue title, then any smaller copy."
+      },
+      {
+        face: "./assets/ui/IMG_0213.jpg",
+        text:
+          "Visually, I want everything to feel unified. type, illustration, background all related in some way. You can get experimental with everything else, as long as the important information stays clear. Let’s make this cover iconic."
+      }
+    ];
+
+    const FLOWER_HAUS_COMPLETE_DIALOGUE = [
+      {
+        face: "./assets/ui/IMG_0212.jpg",
+        text:
+          "Whoa, that cover looks incredible. It really feels like Flower Haus has its own voice now."
+      },
+      {
+        face: "./assets/ui/IMG_0213.jpg",
+        text:
+          "You nailed the hierarchy and the palette feels so cohesive. This is exactly what I was hoping for."
+      },
+      {
+        face: "./assets/ui/IMG_0211.jpg",
+        text:
+          "I’ve sent over your payment for the job! Consider this cover officially approved. Can’t wait to work with you again."
+      }
+    ];
+
+    let current = 0;
+    let activeScript = null;
+    let onDone = null;
+
+    function showLine() {
+      if (!activeScript || current >= activeScript.length) {
+        layer.classList.add("hidden");
+        const cb = onDone;
+        activeScript = null;
+        onDone = null;
+        if (cb) cb();
+        return;
+      }
+
+      const line = activeScript[current];
+      if (line.face) faceImg.src = line.face;
+      textEl.textContent = line.text;
+    }
+
+    function startDialogue(script, speakerName, doneCb) {
+      activeScript = script;
+      current = 0;
+      onDone = doneCb || null;
+      nameEl.textContent = speakerName || "Griffin Flowers";
+      layer.classList.remove("hidden");
+      showLine();
+    }
+
+    layer.addEventListener("click", function () {
+      if (!activeScript) return;
+      current++;
+      showLine();
+    });
+
+    window.startFlowerHausDialogue = function () {
+      startDialogue(FLOWER_HAUS_BRIEF_DIALOGUE, "Griffin Flowers", function () {
+        if (typeof window.setMagazineMode === "function") {
+          window.setMagazineMode(true);
+        }
+        window.flowerHausJobActive = true;
+        window.flowerHausJobComplete = false;
+      });
+    };
+
+    window.startFlowerHausCompleteDialogue = function () {
+      startDialogue(FLOWER_HAUS_COMPLETE_DIALOGUE, "Griffin Flowers", function () {
+        window.flowerHausJobComplete = true;
+        if (typeof window.cashAddIncome === "function") {
+          window.cashAddIncome(500, "Flower Haus Cover");
+        }
+      });
+    };
+  })();
+  </script>
+
+  
+   <!-- Asset browser wiring: asset_1–asset_20 -->
+  <script>
+  (function () {
+    const openBtn     = document.getElementById('open-assets');
+    const win         = document.getElementById('win-asset-browser');
+    const grid        = document.getElementById('asset-grid');
+    const filterInput = document.getElementById('asset-filter');
+
+    if (!openBtn || !win || !grid) return;
+
+    // Preloaded assets: asset_1.png ... asset_20.png
+    // Adjust the path/extension if yours are different
+    const ASSETS = Array.from({ length: 20 }, (_, i) => {
+      const n = i + 1;
+      return {
+        id:   'asset_' + n,
+        label: 'Asset ' + n,
+        url:  './assets/ui/asset_' + n + '.png',
+        tags: ['asset']
+      };
+    });
+
+    function renderAssets() {
+      const term = (filterInput?.value || '').toLowerCase();
+      grid.innerHTML = '';
+
+      ASSETS
+        .filter(a =>
+          !term ||
+          a.label.toLowerCase().includes(term) ||
+          (a.tags || []).some(t => t.toLowerCase().includes(term))
+        )
+        .forEach(asset => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'asset-tile';
+          btn.innerHTML = `
+            <div class="asset-thumb">
+              <img src="${asset.url}" alt="${asset.label}">
+            </div>
+            <div class="asset-label">${asset.label}</div>
+          `;
+
+          btn.addEventListener('click', () => {
+            // Drop this asset into the design canvas as a sticker
+            if (typeof window.addStickerFromURL === 'function') {
+              window.addStickerFromURL(asset.url);
+            } else if (typeof window.addStickerImage === 'function') {
+              const img = new Image();
+              img.onload = () => window.addStickerImage(img);
+              img.src = asset.url;
+            }
+          });
+
+          grid.appendChild(btn);
+        });
+    }
+
+    function openWindow() {
+  win.classList.remove('hidden');
+  win.style.display = 'block';
+  renderAssets();
+
+  // ⭐ ALWAYS bring asset window to front
+  win.style.zIndex = 99999;
+}
+
+
+    openBtn.addEventListener('click', openWindow);
+    filterInput?.addEventListener('input', renderAssets);
+  })();
+  </script>
+<script>
+(function () {
+  const sizeEl = document.getElementById('size');
+  if (!sizeEl) return;
+
+  sizeEl.addEventListener('input', () => {
+    const hot = window.__designHot;
+    if (!hot || !Array.isArray(hot.stickers)) return;
+
+    // Find selected stickers (assets)
+    const selected = hot.stickers.filter(s => s.selected);
+    if (!selected.length) {
+      // nothing selected → do nothing extra;
+      // brush + text still respond to the slider via existing code
+      return;
+    }
+
+    const v = Number(sizeEl.value || 1);
+    // Map slider 1–32 → scale about 0.2–3
+    const scale = Math.max(0.2, Math.min(3, v / 10));
+
+    selected.forEach(s => {
+      s.scale = scale;
+    });
+  });
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const frame             = document.querySelector('.frame');
+  const titleScreen       = document.getElementById('title-screen');
+  const explanationScreen = document.getElementById('explanation-screen');
+  const playBtn           = document.getElementById('title-play-btn'); // your Play Game button
+  const bgm               = document.getElementById('bgm');
+  const bgmToggle         = document.getElementById('bgm-toggle');
+
+  let bgmOn = true;
+
+  // Start state: show title, hide game + explanation
+  if (frame) frame.style.display = 'none';
+  if (titleScreen) titleScreen.classList.remove('hidden');
+  if (explanationScreen) explanationScreen.classList.add('hidden');
+
+  function startMusic() {
+    if (!bgm) return;
+    bgm.volume = 0.5;
+    bgm.play().catch(err => {
+      console.log('Audio play blocked until user gesture:', err);
+    });
+  }
+
+  // STEP 1: Play Game → explanation PNG
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      // Hide title screen
+      if (titleScreen) titleScreen.classList.add('hidden');
+      // Show explanation overlay
+      if (explanationScreen) explanationScreen.classList.remove('hidden');
+      // Start music here if you want it during explanation
+      startMusic();
+    });
+  }
+
+  // STEP 2: Click explanation → into the game
+  if (explanationScreen && frame) {
+    explanationScreen.addEventListener('click', () => {
+      explanationScreen.classList.add('hidden');
+      frame.style.display = 'block';
+    });
+  }
+
+  // Mute / unmute music
+  if (bgmToggle && bgm) {
+    bgmToggle.addEventListener('click', () => {
+      bgmOn = !bgmOn;
+      bgm.muted = !bgmOn;
+      bgmToggle.textContent = bgmOn ? '🔊 Mute' : '🔈 Unmute';
+    });
+  }
+});
+</script>
+
+<!-- Background music (hidden) -->
+<audio id="bgm" src="./assets/audio/title_music.mp3" loop></audio>
+<button id="bgm-toggle">🔊 Mute</button>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const frame            = document.querySelector('.frame');
+  const titleScreen      = document.getElementById('title-screen');
+  const explanationScreen= document.getElementById('explanation-screen');
+  const playBtn          = document.getElementById('btn-play');
+  const explanationBtn   = document.getElementById('btn-explanation');
+
+  // Safety checks
+  if (!frame || !titleScreen || !playBtn) return;
+
+  // Start: show title, hide game + explanation
+  frame.style.display = 'none';
+  titleScreen.classList.remove('hidden');
+  if (explanationScreen) explanationScreen.classList.add('hidden');
+
+  // Play Game → hide title, show main game UI
+  playBtn.addEventListener('click', () => {
+    titleScreen.classList.add('hidden');
+    if (explanationScreen) explanationScreen.classList.add('hidden');
+    frame.style.display = 'block';
+  });
+
+  // Explanation button → show explanation screen
+  if (explanationBtn && explanationScreen) {
+    explanationBtn.addEventListener('click', () => {
+      titleScreen.classList.add('hidden');
+      explanationScreen.classList.remove('hidden');
+    });
+
+    // Click anywhere on explanation page → back to title screen
+    explanationScreen.addEventListener('click', () => {
+      explanationScreen.classList.add('hidden');
+      titleScreen.classList.remove('hidden');
+    });
+  }
+});
+</script>
+</body>
+</html>

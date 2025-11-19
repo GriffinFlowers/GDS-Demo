@@ -1,0 +1,1001 @@
+:root{
+  --screen-w: 1530px; /* inner screen width, tweak to match asset */
+  --screen-h: 825px;  /* inner screen height */
+  --panel: rgba(17,24,39,0.9);
+  --panel2: rgba(31,41,55,0.95);
+  --text: #e8f2ff;
+  --muted: #a7b4c7;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background: url("../assets/ui/room_bg.png") center/cover no-repeat fixed;
+  display:grid;
+  place-items:center;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--text);
+}
+
+.frame{ position:relative; width: 1600px; height: 960px; }
+.monitor{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; }
+
+/* Approximate the screen rectangle inside the monitor PNG. Adjust offsets to fit your asset. */
+.screen{
+  position:absolute;
+  left: 30px;
+  top: 30px;
+  width: var(--screen-w);
+  height: var(--screen-h);
+  overflow:hidden;
+  border-radius: 16px;
+}
+
+
+.dock{
+  position:absolute; left:24px; top:50px;
+  display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;
+}
+.icon{
+  width:86px; height:86px; border-radius:16px;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--text);
+  display:flex; justify-content:center; align-items:center;
+  cursor:pointer; box-shadow: var(--shadow);
+}
+.icon span{ font-size:13px; }
+
+/* Windows */
+.win{ position:absolute; left:260px; top:140px; width:560px; min-height:360px; background:var(--panel);
+      border:1px solid rgba(255,255,255,.1); border-radius: var(--radius); box-shadow: var(--shadow);
+      display:flex; flex-direction:column; overflow:hidden; }
+.win.hidden{ display:none; }
+.titlebar{ height:44px; display:flex; align-items:center; gap:10px; padding:0 12px; background:var(--panel2); cursor:grab; }
+.titlebar .btn{ width:12px; height:12px; border-radius:50%; }
+.btn-close{ background:#ff5f57; } .btn-min{ background:#febc2e; } .btn-max{ background:#28c841; }
+.title{ font-weight:600; margin-left:6px; }
+.content{ padding:14px; flex:1; overflow:auto; }
+textarea{ width:100%; min-height:280px; background:#0f1621; color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px; }
+/* Design app UI */
+.tools{
+  display:flex; gap:8px; align-items:center;
+  background:rgba(255,255,255,.03);
+  padding:8px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.06);
+}
+.tools button, .tools input[type="color"]{
+  appearance:none; border:none; background:#1b2532; color:#e8f2ff;
+  padding:8px 10px; border-radius:10px; cursor:pointer;
+  border:1px solid rgba(255,255,255,.08);
+}
+.tools input[type="range"]{ width:120px; }
+.tools .active{ outline:2px solid #7bdcff; }
+#canvas{
+  background:#eaecf0; display:block; width:100%; height:320px;
+  border-radius:10px; margin-top:10px;
+  border:1px solid rgba(51, 126, 211, 0.08);
+}
+.tools .hint{
+  margin-left: auto;
+  opacity: .75;
+  font-size: 12px;
+}
+.asset-toolbar{
+  display:flex; gap:8px; margin-bottom:8px;
+}
+.asset-toolbar input[type="search"]{
+  flex:1; padding:8px 10px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.08); background:#0f1621; color:#e8f2ff;
+}
+
+.asset-grid{
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap:10px;
+}
+.asset-card{
+  background: rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px; padding:8px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  transition: transform .06s ease, box-shadow .15s ease;
+}
+.asset-card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.4); }
+.asset-card img{
+  width:100%; height:100px; object-fit:contain; image-rendering: -webkit-optimize-contrast;
+  background:#0f1621; border-radius:8px;
+}
+.asset-card .label{ font-size:12px; color:#a7b4c7; text-align:center; word-break: break-all; }
+.briefs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.brief-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.brief-card:hover {
+  background: rgba(255,255,255,0.07);
+  transform: translateY(-1px);
+}
+
+.brief-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #e8f2ff;
+}
+
+.brief-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+/* --- Design window I/O safety net --- */
+#win-design,
+#win-design .content,
+#win-design .tools,
+#win-design button,
+#win-design input,
+#win-design canvas {
+  pointer-events: auto !important;
+}
+
+#win-design .content { position: relative; }
+#win-design canvas   { position: relative; z-index: 1; display:block; }
+#win-design canvas {
+  width: 100%;      /* scales to window width */
+  height: auto;     /* keeps aspect ratio */
+  max-width: 960px; /* optional cap */
+}
+/* Grid of assets */
+.asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+/* Each tile */
+.asset-tile {
+  background: #111722;
+  border-radius: 6px;
+  padding: 6px;
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* Thumbnail area – fixed size */
+.asset-thumb {
+  width: 100%;
+  height: 120px;        /* 👈 change this to make thumbs bigger/smaller */
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The image itself */
+.asset-thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Label under each asset */
+.asset-label {
+  font-size: 11px;
+  color: #e5e7eb;
+  text-align: center;
+}
+
+.asset-toolbar { padding: 8px 0; }
+#win-design canvas { cursor: default; }
+/* ===== DESIGN APP LAYOUT ===== */
+
+#win-design .content {
+  background: #d36956;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.design-shell {
+  display: grid;
+  grid-template-columns: 190px minmax(0,1fr) 220px;
+  grid-template-rows: minmax(0,1fr);
+  gap: 20px;
+  height: 100%;
+}
+
+/* LEFT TOOL BAR */
+.tool-panel {
+  background: #ebb748;
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 70px;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+}
+
+.tool-btn {
+  border: 2px solid #424952;
+  border-radius: 8px;
+  background: #4d555f;
+  color: #f3f4f6;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  padding: 6px;
+}
+.tool-btn:hover {
+  background: #5a6470;
+}
+.tool-btn.active {
+  outline: 2px solid #1e40af;
+  background: #3f4a5a;
+}
+
+/* CENTER AREA */
+.design-center {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.size-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 20px;
+  color: #f9fafb;
+}
+
+.size-bar input[type="range"] {
+  flex: 0 0 70%;
+}
+
+.canvas-frame {
+  flex: 1;
+  background: transparent;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.canvas-frame canvas {
+  background: #faf8e8;
+  border-radius: 26px;
+  box-shadow: 0 0 0 3px #101827;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* RIGHT PANELS */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: #d4d8de;
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  background: #c6cbd1;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid #9ca3af;
+}
+
+/* Typeface block */
+.typeface-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+
+.font-label {
+  font-size: 16px;
+}
+
+.font-scroll {
+  width: 28px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid #4b5563;
+  background: #e5e7eb;
+  cursor: pointer;
+}
+.font-scroll:hover {
+  background: #d1d5db;
+}
+
+/* Color palette */
+.color-body {
+  padding: 10px;
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 2px solid #111827;
+  padding: 0;
+  cursor: pointer;
+}
+.swatch:hover {
+  transform: translateY(-1px);
+}
+/* ===== WEB APP WINDOW ===== */
+
+#win-web .content.web-shell {
+  background: #ffffff;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tab bar */
+.web-tabbar {
+  height: 34px;
+  background: #111111;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 20px;
+}
+
+.web-tab {
+  background: #70767c;
+  color: #f9fafb;
+  padding: 6px 18px;
+  border-radius: 10px 10px 0 0;
+  font-size: 14px;
+}
+
+/* viewport */
+.web-view {
+  flex: 1;
+  background: #ffffff;
+  padding: 40px 60px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.web-page.hidden {
+  display: none;
+}
+
+/* Home page layout */
+.web-logo-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.web-logo-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  border: 6px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+}
+
+.web-search-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.web-search-box {
+  width: 70%;
+  max-width: 800px;
+  height: 54px;
+  border-radius: 27px;
+  background: #d4d4d4;
+  border: 2px solid #4b4b4b;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+#web-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: #222;
+}
+
+#web-search-input::placeholder {
+  color: #f8f8f8;
+}
+
+#web-search-input:focus {
+  outline: none;
+}
+
+.web-search-icon {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Suggested search buttons */
+.web-suggest-title {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+.web-suggest-row {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.web-suggest {
+  min-width: 180px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  border: 2px solid #555;
+  background: #cfcfcf;
+  text-transform: lowercase;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.web-suggest:hover {
+  background: #e2e2e2;
+}
+
+/* Principles page */
+.web-img-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.web-img-full {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  border-radius: 10px;
+}
+/* Back button in tab bar */
+.web-back {
+  margin-right: 10px;
+  margin-left: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #4b5563;
+  color: #f9fafb;
+  cursor: pointer;
+  font-size: 12px;
+}
+.web-back:hover {
+  background: #6b7280;
+}
+
+.hidden {
+  display: none !important;
+}
+/* ===== EMAIL APP ===== */
+
+#win-email .content.email-shell {
+  padding: 0;
+  background: #e4e72b;          /* neon-ish lime */
+  display: flex;
+  flex-direction: column;
+}
+
+#win-email .web-tabbar {
+  height: 34px;
+  background: #111111;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 20px;
+}
+
+#win-email .web-tab {
+  background: #000000;
+  color: #f9fafb;
+  padding: 6px 18px;
+  border-radius: 10px 10px 0 0;
+  font-size: 14px;
+}
+
+.email-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: 30px;
+  padding: 30px 40px;
+  box-sizing: border-box;
+}
+
+/* left column */
+.email-list-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.email-inbox-title {
+  font-size: 32px;
+  margin: 0 0 10px;
+}
+
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.email-item {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: 26px;
+  border: 2px solid #a3b085;
+  background: #f7ffd9;
+  cursor: pointer;
+  font-size: 16px;
+}
+.email-item:hover {
+  background: #ffffff;
+}
+.email-item--selected {
+  border-color: #111827;
+}
+.email-item-subject {
+  font-weight: 600;
+}
+.email-item-preview {
+  font-size: 14px;
+}
+
+/* right column */
+.email-detail-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-card {
+  width: 100%;
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 26px 30px 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.email-body {
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.email-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.email-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 2px solid #111827;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+}
+.email-btn.primary {
+  background: #111827;
+  color: #f9fafb;
+}
+.email-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.email-status-line {
+  font-size: 13px;
+  color: #000000;
+}
+.email-status-line.accepted {
+  color: #166534;
+  font-weight: 600;
+}
+.email-status-line.declined {
+  color: #b91c1c;
+  font-weight: 600;
+}
+/* ================= EMAIL APP (BRIEFS) ================= */
+
+#win-email .content {
+  background: #2de4a7;          /* lime green background like your mockup */
+  padding: 40px 60px;
+}
+
+#email-app {
+  display: flex;
+  gap: 60px;
+}
+
+/* LEFT SIDE – inbox cards */
+
+#email-app aside {
+  width: 40%;
+  border: none;
+  padding: 0;
+}
+
+.email-inbox-title {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0;
+}
+
+#m-list {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* pill-shaped inbox items */
+
+.email-card {
+  width: 100%;
+  text-align: left;
+  border-radius: 40px;
+  border: none;
+  padding: 18px 28px;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.email-card--empty {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.email-card--selected {
+  outline: 3px solid #222;
+}
+
+/* RIGHT SIDE – big white brief bubble */
+
+#email-app main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* hide the little subject bar you had before */
+.email-main-header,
+#m-meta {
+  display: none;
+}
+
+.email-main-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* big rounded white text panel */
+
+#m-body {
+  background: #ffffff;
+  border-radius: 48px;
+  padding: 32px 40px;
+  min-height: 320px;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #000;                /* <- black text like you asked */
+  white-space: pre-wrap;      /* keep line breaks in the brief text */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Accept / Decline buttons at the bottom */
+
+#m-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.email-btn {
+  border-radius: 999px;
+  padding: 10px 26px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.email-btn-accept {
+  background: #2ecc71;
+  color: #000;
+}
+
+.email-btn-decline {
+  background: transparent;
+  color: #000;
+  border: 2px solid #000;
+}
+/* === Dialogue overlay === */
+
+/* === Dialogue overlay === */
+
+.dialogue {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 9999;
+}
+
+.dialogue.hidden {
+  display: none;
+}
+
+.dialogue-inner {
+  position: relative;
+  margin-bottom: 40px;
+  max-width: 1200px;
+  width: 95%;
+  cursor: pointer;
+}
+
+/* dialogue frame PNG */
+.dialogue-frame {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- FACE POSITIONING (moved down into the white box) --- */
+.dialogue-face-wrap {
+  position: absolute;
+  top: 0px;        /* moved DOWN */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;       /* larger portrait */
+  height: 300px;      /* square crop */
+  overflow: hidden;
+}
+
+.dialogue-face {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --- TEXT PANEL --- */
+.dialogue-text-wrap {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 13%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #f3ecdd; /* slightly warmer off-white */
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* name label */
+.dialogue-name {
+  font-size: 18px;    /* bigger */
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+/* MAIN TEXT (bigger now) */
+.dialogue-text {
+  font-size: 26px;    /* <-- BIGGER LIKE YOUR MOCKUP */
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+/* continue hint */
+.dialogue-hint {
+  font-size: 14px;
+  opacity: 0.7;
+  align-self: flex-end;
+  margin-top: 6px;
+}
+/* Dock container (optional—keep your spacing) */
+.dock {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 10px;
+}
+
+.dock .icon {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 90px;  /* adjust size here */
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dock .icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+#win-asset-browser {
+  z-index: 50;         /* make sure it’s on top of Design */
+   width: 640px;          /* adjust as needed */
+  height: 420px;         /* overall window height */
+  top: 40px;             /* nudge it down from top of screen */
+  left: 60px;            /* nudge it from the left */
+}
+/* Make the asset window content scrollable */
+#win-asset-browser .content {
+  height: calc(100% - 40px); /* leaves room for titlebar, adjust if needed */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;        /* room for scrollbar */
+}
+/* --- TITLE SCREEN --- */
+#title-screen {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Title image (restored original sizing) */
+#title-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Play button (centered below the image) */
+#title-play-btn {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #232f3e;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 20px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Explanation button (bottom-right) */
+#btn-explanation {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  background: #232f3e;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+}
+
+
+/* --- EXPLANATION SCREEN --- */
+#explanation-screen {
+  position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#explanation-bg {
+  width: 90%;
+  height: auto;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.icon img {
+  width: 64px;     /* adjust as needed */
+  height: 64px;
+  object-fit: contain;
+}
+
+.icon-label {
+  font-size: 12px;
+  color: #e5e7eb;    /* light gray text */
+  margin-top: 4px;
+  text-align: center;
+  pointer-events: none; /* allows clicking the button, not the text */
+}
+#win-asset-browser {
+  z-index: 99999 !important;
+}
+
+
+
