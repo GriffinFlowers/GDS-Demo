@@ -58,12 +58,12 @@
         </button>
 
         <button class="icon" data-open="#win-commissions">
-          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <img src="./assets/ui/commissions_app.png" alt="commissions">
           <span class="icon-label">Commissions</span>
         </button>
 
         <button class="icon" data-open="#win-cash">
-          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <img src="./assets/ui/cash_app.png" alt="cash">
           <span class="icon-label">Cash</span>
         </button>
 
@@ -321,28 +321,36 @@
           <div class="title">Commissions</div>
         </div>
         <div class="content">
-          <div id="commissions-app" style="display:flex; width:100%;">
-            <aside style="width:220px; border-right:1px solid #1e2b4d; padding:10px;">
-              <div style="font-weight:700; margin-bottom:8px;">Filters</div>
-              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-open" type="checkbox" checked> Open</label>
-              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-acc"  type="checkbox" checked> Accepted</label>
-              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-done" type="checkbox" checked> Done</label>
-              <hr />
-              <button id="c-new">+ New Mock Brief</button>
-            </aside>
-            <main style="flex:1; display:flex; flex-direction:column;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px;">
-                <div style="display:flex; gap:12px; align-items:center;">
-                  <strong>Commissions</strong>
-                  <span id="c-count" class="tag"></span>
-                </div>
-                <input id="c-search" type="search" placeholder="Search…" />
+          <<div id="commissions-app" class="comm-shell">
+            <!-- LEFT: list of commissions -->
+            <aside class="comm-list-pane">
+              <h1 class="comm-title">Paid Commissions</h1>
+              <div id="comm-list" class="comm-list">
+                <!-- JS will inject up to 10 briefs here -->
               </div>
-              <div id="c-list" style="padding:10px; display:flex; flex-direction:column; gap:8px; overflow:auto;"></div>
+            </aside>
+          
+            <!-- RIGHT: detail view -->
+            <main class="comm-detail-pane">
+              <div class="comm-detail-card">
+                <div id="comm-detail-main" class="comm-detail-main">
+                  <p class="comm-empty">
+                    Select a commission on the left to view the full brief.
+                  </p>
+                </div>
+          
+                <div class="comm-detail-actions">
+                  <button id="comm-accept" class="comm-btn comm-btn-accept" disabled>
+                    Accept
+                  </button>
+                  <button id="comm-decline" class="comm-btn comm-btn-decline" disabled>
+                    Decline
+                  </button>
+                </div>
+              </div>
             </main>
           </div>
-        </div>
-      </div>
+          
 
       <!-- Cash Tracker -->
       <div class="win hidden" id="win-cash">
@@ -1037,22 +1045,22 @@
   })();
   </script>
 
-  <!-- Design UI wiring for new layout (Upload = submit design only) -->
-  <script>
+  <!-- Design UI wiring for new layout (Upload + swatches/clear/undo) -->
+<script>
   (function(){
     const hot        = (window.__designHot ||= {});
     const colorInput = document.getElementById('color');
-
+  
     // Color swatches -> hidden color input
-    document.querySelectorAll('.swatch').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.swatch').forEach(btn => {
+      btn.addEventListener('click', () => {
         const c = btn.dataset.color;
         if (colorInput) colorInput.value = c;
       });
     });
-
+  
     // Clear: wipe canvas + remove stickers/text
-    document.getElementById('clear')?.addEventListener('click', ()=>{
+    document.getElementById('clear')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h || !h.pctx || !h.paint) return;
       h.pctx.fillStyle = '#faf8e8';
@@ -1060,9 +1068,9 @@
       if (h.stickers)  h.stickers.length  = 0;
       if (h.textItems) h.textItems.length = 0;
     });
-
+  
     // Undo: last text OR last sticker
-    document.getElementById('undo')?.addEventListener('click', ()=>{
+    document.getElementById('undo')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h) return;
       if (h.textItems && h.textItems.length){
@@ -1075,29 +1083,49 @@
       }
       alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
     });
-
-    // Upload = submit design to client (no file upload)
-    (function(){
-      const uploadBtn = document.getElementById('upload');
-      if (!uploadBtn) return;
-
+  
+    // 🔹 Upload = submit design to client/commission (no file upload)
+    const uploadBtn = document.getElementById('upload');
+    if (uploadBtn) {
       uploadBtn.addEventListener('click', () => {
+        let handled = false;
+  
+        // 1) Flower Haus brief
         if (
           window.flowerHausJobActive &&
           !window.flowerHausJobComplete &&
           typeof window.startFlowerHausCompleteDialogue === 'function'
         ) {
-          const ok = confirm('Submit this design to the client?');
+          const ok = confirm('Submit this design to the Flower Haus client?');
           if (ok) {
             window.startFlowerHausCompleteDialogue();
+            handled = true;
           }
-        } else {
-          alert('There is no active client brief to submit to yet.');
+        }
+  
+        // 2) Commission job
+        if (!handled &&
+            window.activeCommissionId &&
+            typeof window.markActiveCommissionCompleted === 'function') {
+  
+          const ok = confirm('Submit this design to complete your current commission?');
+          if (ok) {
+            window.markActiveCommissionCompleted(); // calls into commissions.js
+            handled = true;
+          }
+        }
+  
+        // Nothing active
+        if (!handled) {
+          alert('There is no active client brief or commission to submit yet.');
         }
       });
-    })();
+    }
   })();
   </script>
+  
+
+
 
   <!-- Web app logic (with color theory + back button) -->
   <script>

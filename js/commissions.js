@@ -1,118 +1,292 @@
 // js/commissions.js
-(function(){
-  const root = document.getElementById('win-commissions');
-  if(!root) return;
+// Paid Commissions app – one active job at a time.
 
-  const els = {
-    list: root.querySelector('#c-list'),
-    count: root.querySelector('#c-count'),
-    fOpen: root.querySelector('#c-f-open'),
-    fAcc:  root.querySelector('#c-f-acc'),
-    fDone: root.querySelector('#c-f-done'),
-    search:root.querySelector('#c-search'),
-    newBtn:root.querySelector('#c-new')
-  };
+(function () {
+  const appEl        = document.getElementById("commissions-app");
+  const listEl       = document.getElementById("comm-list");
+  const detailMainEl = document.getElementById("comm-detail-main");
+  const acceptBtn    = document.getElementById("comm-accept");
+  const declineBtn   = document.getElementById("comm-decline");
 
-  ['change','input'].forEach(ev=>{
-    els.fOpen.addEventListener(ev, render);
-    els.fAcc.addEventListener(ev, render);
-    els.fDone.addEventListener(ev, render);
-    els.search.addEventListener(ev, render);
-  });
+  if (!appEl || !listEl || !detailMainEl || !acceptBtn || !declineBtn) return;
 
-  els.newBtn.addEventListener('click', ()=>{
-    const id = 'C-' + Math.floor(100+Math.random()*900);
-    GDS.state.commissions.unshift({
-      id, title:'Poster design', client:'Local Arts Fair',
-      fee: 120+Math.floor(Math.random()*200),
-      due: GDS.daysFromNow(2+Math.floor(Math.random()*7)),
-      status:'open'
+  // Global "active commission" lock shared with other scripts
+  window.activeCommissionId = window.activeCommissionId || null;
+
+  // --- DATA: up to 10 briefs ---
+  const COMMISSIONS = [
+    {
+      id: "aqua-tech-logo",
+      from: "Aqua Tech",
+      title: "New logo",
+      client: "Aqua Tech",
+      project: "New logo",
+      deadline: "3 days",
+      deliverable: "1 Logo",
+      body:
+        "We’re Aqua Tech, a surfboard company built on the blend of precision engineering and ocean-born creativity. Our current logo doesn’t fully capture who we’ve grown into, and we’re looking for a fresh mark that reflects the heart of our brand.",
+      status: "open"
+    },
+    {
+      id: "luna-skate-poster",
+      from: "Luna Skate Co.",
+      title: "Night skate event poster",
+      client: "Luna Skate Co.",
+      project: "Event poster",
+      deadline: "1 week",
+      deliverable: "1 Poster (print + digital)",
+      body:
+        "We’re hosting a night skate jam under blacklight. We want a bold, high-contrast poster that feels electric and rebellious, but still clearly communicates date, time, and location.",
+      status: "open"
+    },
+    {
+      id: "neon-diner-menu",
+      from: "Neon Diner",
+      title: "Menu redesign",
+      client: "Neon Diner",
+      project: "Menu redesign",
+      deadline: "10 days",
+      deliverable: "Print-ready menu PDF",
+      body:
+        "Our current menu feels cluttered and hard to read. We’d love a cleaner layout that still leans into our neon, retro-futurist vibe. Strong hierarchy for categories and prices is key.",
+      status: "open"
+    },
+    {
+      id: "shorebreak-hostel-brand",
+      from: "Shorebreak Hostel",
+      title: "Mini brand refresh",
+      client: "Shorebreak Hostel",
+      project: "Brand refresh",
+      deadline: "2 weeks",
+      deliverable: "Logo update + simple brand sheet",
+      body:
+        "We’re a small surf hostel that has grown a loyal community. We want a refreshed logo and a small brand sheet that helps us stay consistent across our website, stickers, and merch.",
+      status: "open"
+    },
+    {
+      id: "midnight-radio-cover",
+      from: "Midnight Radio",
+      title: "Podcast cover art",
+      client: "Midnight Radio",
+      project: "Cover art",
+      deadline: "5 days",
+      deliverable: "Square cover art (3000×3000px)",
+      body:
+        "Our show is about late-night creativity, music, and conversations. We’re looking for cover art that feels moody but inviting — something that looks great both small in a feed and full-size.",
+      status: "open"
+    }
+    // add more objects here if you want up to 10
+  ];
+
+  let current = null;
+  const itemById = new Map();
+
+  // -------- helpers --------
+
+  function hasAnyActiveJob() {
+    // Email brief (Flower Haus) counts as an active job
+    const flowerActive =
+      !!window.flowerHausJobActive && !window.flowerHausJobComplete;
+
+    const commissionActive = !!window.activeCommissionId;
+
+    return flowerActive || commissionActive;
+  }
+
+  function renderList() {
+    listEl.innerHTML = "";
+    itemById.clear();
+
+    COMMISSIONS.forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "comm-item";
+      btn.dataset.id = c.id;
+
+      btn.innerHTML = `
+        <div class="comm-item-from">From: ${c.from}</div>
+        <div class="comm-item-title">${c.title}</div>
+      `;
+
+      btn.addEventListener("click", () => {
+        selectCommission(c.id);
+      });
+
+      listEl.appendChild(btn);
+      itemById.set(c.id, btn);
     });
-    // add an email
-    GDS.state.inbox.unshift(GDS.email(`New brief: ${id}`, 'Brief Bot', `A new commission ${id} has arrived. Open Commissions to accept.`));
-    GDS.save();
-    render();
-    GDS.notify(`New commission ${id}`);
-  });
 
-  function row(c){
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.style.padding = '10px';
-    div.style.border = '1px solid #21335c';
-    div.style.borderRadius = '12px';
-    div.style.background = '#0b102044';
+    updateActiveState();
+  }
 
-    div.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-        <div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <strong>${c.title}</strong>
-            <span class="tag">${c.id}</span>
-          </div>
-          <div class="muted">Client: <strong>${c.client}</strong></div>
-          <div class="muted">Due: <strong>${c.due}</strong></div>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span class="tag">${c.status}</span>
-            <span class="${c.status==='done'?'money-pos':'tag'}">${GDS.fmtMoney(c.fee)}</span>
-          </div>
-          <div style="display:flex; gap:8px;">
-            ${c.status==='open'     ? `<button data-act="accept">Accept</button>` : ''}
-            ${c.status==='accepted' ? `<button data-act="submit">Mark Done</button>` : ''}
-            ${c.status!=='done'     ? `<button data-act="decline">Decline</button>` : ''}
-            ${c.status==='done'     ? `<button data-act="reopen">Reopen</button>` : ''}
-          </div>
-        </div>
+  function selectCommission(id) {
+    const c = COMMISSIONS.find((x) => x.id === id);
+    if (!c) return;
+    current = c;
+    renderDetail(c);
+    updateActiveState();
+  }
+
+  function renderDetail(c, opts) {
+    opts = opts || {};
+
+    let statusLabel = "Open";
+    let note = "";
+
+    if (c.status === "accepted") {
+      statusLabel = "In progress";
+      note =
+        "This job is currently active. Finish your design in the Design app and hit Upload to complete it.";
+    } else if (c.status === "completed") {
+      statusLabel = "Completed";
+      note = opts.showCongrats
+        ? "🎉 Job completed! Great work on this commission."
+        : "This commission has been completed.";
+    } else if (c.status === "declined") {
+      statusLabel = "Declined";
+      note = "You turned this commission down.";
+    }
+
+    detailMainEl.innerHTML = `
+      <div class="comm-detail-lines">
+        <p><strong>Client:</strong> ${c.client}</p>
+        <p><strong>Project:</strong> ${c.project}</p>
+        <p><strong>Deadline:</strong> ${c.deadline}</p>
+        <p><strong>Deliverable:</strong> ${c.deliverable}</p>
       </div>
+
+      <p class="comm-detail-body">
+        ${c.body}
+      </p>
+
+      <p class="comm-detail-status">
+        <strong>Status:</strong> ${statusLabel}
+      </p>
+
+      ${note ? `<p class="comm-detail-note">${note}</p>` : ""}
     `;
 
-    div.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button');
-      if(!btn) return;
-      const act = btn.dataset.act;
-      if(act==='accept'){
-        c.status='accepted'; GDS.save(); render(); GDS.notify(`Accepted ${c.id}`);
-      }
-      if(act==='submit'){
-        c.status='done';
-        GDS.state.cash += c.fee;
-        GDS.state.history.unshift({type:'income', label:`Commission ${c.id}: ${c.title}`, amount:c.fee, ts:Date.now()});
-        GDS.save(); render(); GDS.notify(`Completed ${c.id} +${GDS.fmtMoney(c.fee)}`);
-        // If cash window is open, ask it to refresh
-        window.dispatchEvent(new CustomEvent('cash:refresh'));
-      }
-      if(act==='decline'){
-        GDS.state.commissions = GDS.state.commissions.filter(x=>x!==c);
-        GDS.save(); render(); GDS.notify(`Declined ${c.id}`);
-      }
-      if(act==='reopen'){
-        c.status='accepted'; GDS.save(); render();
-      }
-    });
-
-    return div;
+    // Button state based on status
+    if (c.status === "completed") {
+      acceptBtn.disabled = true;
+      declineBtn.disabled = true;
+    } else if (c.status === "accepted") {
+      acceptBtn.disabled = true;
+      declineBtn.disabled = true; // locked in; finish via Upload
+    } else if (c.status === "declined") {
+      acceptBtn.disabled = false;
+      declineBtn.disabled = true;
+    } else {
+      // open
+      acceptBtn.disabled = false;
+      declineBtn.disabled = false;
+    }
   }
 
-  function render(){
-    const q = (els.search.value||'').toLowerCase();
-    const visible = GDS.state.commissions.filter(c=>{
-      if(q && !(c.title.toLowerCase().includes(q)||c.client.toLowerCase().includes(q)||c.id.toLowerCase().includes(q))) return false;
-      if(c.status==='open'     && !els.fOpen.checked) return false;
-      if(c.status==='accepted' && !els.fAcc.checked)  return false;
-      if(c.status==='done'     && !els.fDone.checked) return false;
-      return true;
+  function updateActiveState() {
+    itemById.forEach((btn, id) => {
+      btn.classList.toggle("is-active", current && current.id === id);
     });
+  }
 
-    els.count.textContent = `${visible.length} shown / ${GDS.state.commissions.length} total`;
-    els.list.innerHTML = '';
-    if(!visible.length){
-      els.list.innerHTML = `<div class="muted">No commissions match.</div>`;
+  function findCommissionById(id) {
+    return COMMISSIONS.find((c) => c.id === id) || null;
+  }
+
+  // -------- accept / decline handlers --------
+
+  acceptBtn.addEventListener("click", () => {
+    if (!current) return;
+  
+    if (current.status !== "open") {
+      alert("This commission is not open to accept.");
       return;
     }
-    visible.forEach(c=> els.list.appendChild(row(c)));
+  
+    // global lock: only one job (brief OR commission) at a time
+    if (hasAnyActiveJob()) {
+      alert(
+        "You already have an active job. Finish that project and upload your design before accepting another commission."
+      );
+      return;
+    }
+  
+    current.status = "accepted";
+  
+    // ⭐ IMPORTANT ⭐  
+    window.activeCommissionId = current.id;
+  
+    renderDetail(current);
+    updateActiveState();
+  });
+  
+
+  declineBtn.addEventListener("click", () => {
+    if (!current) return;
+
+    if (current.status === "accepted" && window.activeCommissionId === current.id) {
+      alert(
+        "You already accepted this commission. Finish it through the Design app upload to complete the job."
+      );
+      return;
+    }
+
+    if (current.status === "completed") {
+      alert("This commission is already completed.");
+      return;
+    }
+
+    current.status = "declined";
+    if (window.activeCommissionId === current.id) {
+      window.activeCommissionId = null;
+    }
+    renderDetail(current);
+    updateActiveState();
+  });
+
+  // -------- API for other scripts (Design app upload) --------
+
+// Called from the Design app when the player hits Upload.
+window.markActiveCommissionCompleted = function () {
+  if (!window.activeCommissionId) {
+    alert("No active commission found to complete.");
+    return null;
   }
 
-  render();
+  const c = findCommissionById(window.activeCommissionId);
+  window.activeCommissionId = null;
+
+  if (!c) {
+    alert("Something went wrong finding that commission.");
+    return null;
+  }
+
+  c.status = "completed";
+
+  // Hide the design window and bring Commissions to the front
+  const designWin = document.getElementById("win-design");
+  const commWin   = document.getElementById("win-commissions");
+
+  if (designWin) {
+    designWin.classList.add("hidden");
+  }
+
+  if (commWin) {
+    commWin.classList.remove("hidden");
+    commWin.style.display = "block";
+  }
+
+  current = c;
+  renderDetail(c, { showCongrats: true });
+  updateActiveState();
+
+  // Extra feedback so you KNOW it fired
+  alert("Job completed! Your commission has been submitted.");
+
+  return c;
+};
+
+
+  // Initial render
+  renderList();
 })();

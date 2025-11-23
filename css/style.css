@@ -812,6 +812,167 @@ textarea{
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
+/* === Commissions app layout === */
+
+.comm-shell {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #ffc800; /* bright yellow like your mock */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* LEFT COLUMN: list */
+.comm-list-pane {
+  width: 40%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comm-title {
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.comm-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;              /* scroll when there are lots of jobs */
+  padding-right: 4px;
+}
+
+/* Each job in the list */
+.comm-item {
+  text-align: left;
+  border: none;
+  border-radius: 24px;
+  padding: 14px 18px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font: inherit;
+}
+
+.comm-item-from {
+  font-weight: 700;
+}
+
+.comm-item-title {
+  font-size: 15px;
+}
+
+.comm-item.is-active {
+  outline: 3px solid #111722;
+  outline-offset: 0;
+}
+
+/* RIGHT COLUMN: detail */
+.comm-detail-pane {
+  flex: 1;
+  padding: 32px 32px 28px;
+  display: flex;
+  align-items: stretch;
+}
+
+.comm-detail-card {
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 28px 32px 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.comm-detail-main {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.comm-detail-lines p {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.comm-detail-body {
+  margin-top: 18px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.comm-detail-status {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.comm-empty {
+  margin: 0;
+  font-size: 15px;
+  color: #444;
+}
+
+/* Actions */
+.comm-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.comm-btn {
+  min-width: 90px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.comm-btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.comm-btn-accept {
+  background: #00b248;
+  color: #ffffff;
+}
+
+.comm-btn-decline {
+  background: #ff3b30;
+  color: #ffffff;
+}
+/* Give the Commissions window the solid yellow body, like Email's green */
+#win-commissions .content {
+  background: #ffc800;            /* same yellow as your mock */
+  border-radius: 0 0 24px 24px;   /* rounded bottom corners under the titlebar */
+  padding: 24px 24px 20px;
+}
+
+/* Let the inner shell just handle layout, not background shape */
+.comm-shell {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: transparent;        /* was yellow before */
+  border-radius: 0;               /* the outer content handles rounding */
+}
+/* Change all text color inside the right-side commission detail */
+.comm-detail-main {
+  color: #111722; /* or whatever color you want */
+}
 
 
 /* Helpers */

@@ -103,6 +103,12 @@
       statusById[currentId] = "accepted";
       if (window.onBriefAccepted) window.onBriefAccepted(currentId);
       acceptBtn.textContent = "Accepted!";
+      // Don't allow accepting the Flower Haus brief if a commission is already active
+if (window.activeCommissionId) {
+  alert('You already have an active commission. Finish and upload that job before accepting a new brief.');
+  return;
+}
+
 
       // Trigger Griffin dialogue when Flower Haus brief is accepted
       if (
