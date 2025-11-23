@@ -5,88 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Desktop Prototype</title>
   <link rel="stylesheet" href="./css/style.css" />
-  
 </head>
 <body>
-  <body>
   <!-- TITLE SCREEN OVERLAY -->
-<div id="title-screen">
-  <img src="./assets/ui/title_screen.png" id="title-img" alt="Title Screen">
-  <button id="title-play-btn">Play Game</button>
-  <button id="btn-explanation" class="title-btn">Explanation</button>
+  <div id="title-screen">
+    <img src="./assets/ui/title_screen.png" id="title-img" alt="Title Screen">
+    <button id="title-play-btn">Play Game</button>
+    <button id="btn-explanation" class="title-btn">Explanation</button>
+  </div>
 
-</div>
-<div id="explanation-screen" class="hidden">
-  <img
-    id="explanation-bg"
-    src="./assets/ui/explanation_page.png"
-    alt="Explanation Page"
-  />
-</div>
+  <!-- EXPLANATION SCREEN -->
+  <div id="explanation-screen" class="hidden">
+    <img
+      id="explanation-bg"
+      src="./assets/ui/explanation_page.png"
+      alt="Explanation Page"
+    />
+  </div>
 
-
-  <div class="frame">
-    <!-- existing monitor + windows here -->
-
+  <!-- MAIN GAME FRAME -->
   <div class="frame">
     <!-- Monitor background image -->
     <img class="monitor" src="./assets/ui/computer_base.png" alt="computer base" />
 
-    <!-- The 'screen' area where desktop icons live -->
+    <!-- The 'screen' area where desktop icons + windows live -->
     <div class="screen" id="screen">
+      <!-- Dock icons -->
       <div class="dock">
-       <button class="icon" data-open="#win-design">
-  <img src="./assets/ui/design_app_icon.png" alt="Design App">
-  <span class="icon-label">Design</span>
-</button>
+        <button class="icon" data-open="#win-design">
+          <img src="./assets/ui/design_app_icon.png" alt="Design App">
+          <span class="icon-label">Design</span>
+        </button>
 
-<button class="icon" data-open="#win-web">
-  <img src="./assets/ui/web_app_icon.png" alt="Web App">
-  <span class="icon-label">Web Search</span>
-</button>
+        <button class="icon" data-open="#win-web">
+          <img src="./assets/ui/web_app_icon.png" alt="Web App">
+          <span class="icon-label">Web Search</span>
+        </button>
 
-<button class="icon" data-open="#win-email">
-  <img src="./assets/ui/email_app_icon.png" alt="Email App">
-  <span class="icon-label">Zoomi Mail</span>
-</button>
+        <button class="icon" data-open="#win-email">
+          <img src="./assets/ui/email_app_icon.png" alt="Email App">
+          <span class="icon-label">Zoomi Mail</span>
+        </button>
 
+        <button class="icon" data-open="#win-briefs">
+          <img src="./assets/ui/question_block.png" alt="question block">
+          <span class="icon-label">Explanation</span>
+        </button>
 
-        <button class="icon" data-open="#win-cash"><span>Cash</span></button>
-        <button class="icon" data-open="#win-briefs"><span>Briefs</span></button>
-        <button class="icon" data-open="#win-notes"><span>Notes</span></button>
-        <button class="icon" data-open="#win-commissions"><span>Commissions</span></button>
-        <button class="icon" data-open="#win-cash"><span>Cash</span></button>
+        <button class="icon" data-open="#win-notes">
+          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <span class="icon-label">Notes</span>
+        </button>
 
-        <!-- Email -->
-        <div class="win hidden" id="win-email">
-          <div class="titlebar">
-            <div class="btn btn-close" data-close></div>
-            <div class="btn btn-min" data-min></div>
-            <div class="btn btn-max" data-max></div>
-            <div class="title">Email</div>
-          </div>
-          <div class="content">
-            <div id="email-app">
-              <aside>
-                <div class="email-header">
-                  <h1 class="email-inbox-title">Inbox</h1>
-                </div>
-                <div id="m-list"></div>
-              </aside>
+        <button class="icon" data-open="#win-commissions">
+          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <span class="icon-label">Commissions</span>
+        </button>
 
-              <main>
-                <!-- header hidden with CSS but kept for structure -->
-                <div class="email-main-header">
-                  <div id="m-subj">(no message selected)</div>
-                </div>
+        <button class="icon" data-open="#win-cash">
+          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <span class="icon-label">Cash</span>
+        </button>
 
-                <div class="email-main-body">
-                  <div id="m-meta"></div>
-                  <div id="m-body" style="white-space:pre-wrap;"></div>
-                  <div id="m-actions"></div>
-                </div>
-              </main>
-            </div>
+        <button class="icon" data-open="#win-asset-browser">
+          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <span class="icon-label">checkerboard</span>
+        </button>
+      </div>
+
+      <!-- Email -->
+      <div class="win hidden" id="win-email">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Email</div>
+        </div>
+        <div class="content">
+          <div id="email-app">
+            <aside>
+              <div class="email-header">
+                <h1 class="email-inbox-title">Inbox</h1>
+              </div>
+              <div id="m-list"></div>
+            </aside>
+
+            <main>
+              <!-- header hidden with CSS but kept for structure -->
+              <div class="email-main-header">
+                <div id="m-subj">(no message selected)</div>
+              </div>
+
+              <div class="email-main-body">
+                <div id="m-meta"></div>
+                <div id="m-body" style="white-space:pre-wrap;"></div>
+                <div id="m-actions"></div>
+              </div>
+            </main>
           </div>
         </div>
       </div>
@@ -196,7 +211,7 @@
 
           <!-- “Browser” viewport -->
           <div class="web-view">
-            <!-- HOME PAGE (Web app.png style) -->
+            <!-- HOME PAGE -->
             <section id="web-home" class="web-page">
               <div class="web-logo-row">
                 <div class="web-logo-circle">🌐</div>
@@ -254,18 +269,16 @@
         </div>
       </div>
 
-      <!-- Briefs placeholder -->
+      <!-- Briefs -->
       <div class="win hidden" id="win-briefs">
         <div class="titlebar">
           <div class="btn btn-close" data-close></div>
           <div class="btn btn-min" data-min></div>
           <div class="btn btn-max"></div>
-          <div class="title">Briefs (placeholder)</div>
+          <div class="title">Briefs</div>
         </div>
         <div class="content">
-          <div class="content">
-            <div id="briefs-list" class="briefs-list"></div>
-          </div>
+          <div id="briefs-list" class="briefs-list"></div>
         </div>
       </div>
 
@@ -275,108 +288,108 @@
           <div class="btn btn-close" data-close></div>
           <div class="btn btn-min" data-min></div>
           <div class="btn btn-max" data-max></div>
-          <div class="title">Notes (placeholder)</div>
+          <div class="title">Notes</div>
         </div>
         <div class="content">
           <textarea placeholder="Write notes..."></textarea>
         </div>
       </div>
-    </div>
-    <!-- Asset Browser window -->
-    <div class="win hidden" id="win-asset-browser">
-      <div class="titlebar">
-        <div class="btn btn-close" data-close></div>
-        <div class="btn btn-min" data-min></div>
-        <div class="btn btn-max" data-max></div>
-        <div class="title">Assets</div>
-      </div>
-      <div class="content">
-        <div id="asset-toolbar" class="asset-toolbar">
-          <input id="asset-filter" type="search" placeholder="Filter assets..." />
+
+      <!-- Asset Browser window -->
+      <div class="win hidden" id="win-asset-browser">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Assets</div>
         </div>
-        <div id="asset-grid" class="asset-grid"></div>
-        <div class="muted" style="margin-top:8px;">Tip: click an asset to place it in the canvas.</div>
+        <div class="content">
+          <div id="asset-toolbar" class="asset-toolbar">
+            <input id="asset-filter" type="search" placeholder="Filter assets..." />
+          </div>
+          <div id="asset-grid" class="asset-grid"></div>
+          <div class="muted" style="margin-top:8px;">Tip: click an asset to place it in the canvas.</div>
+        </div>
       </div>
-    </div>
-  </div>
-    
 
-  <!-- Commissions -->
-  <div class="win hidden" id="win-commissions">
-    <div class="titlebar">
-      <div class="btn btn-close" data-close></div>
-      <div class="btn btn-min" data-min></div>
-      <div class="btn btn-max" data-max></div>
-      <div class="title">Commissions</div>
-    </div>
-    <div class="content">
-      <div id="commissions-app" style="display:flex; width:100%;">
-        <aside style="width:220px; border-right:1px solid #1e2b4d; padding:10px;">
-          <div style="font-weight:700; margin-bottom:8px;">Filters</div>
-          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-open" type="checkbox" checked> Open</label>
-          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-acc"  type="checkbox" checked> Accepted</label>
-          <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-done" type="checkbox" checked> Done</label>
-          <hr />
-          <button id="c-new">+ New Mock Brief</button>
-        </aside>
-        <main style="flex:1; display:flex; flex-direction:column;">
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:10px;">
-            <div style="display:flex; gap:12px; align-items:center;">
-              <strong>Commissions</strong>
-              <span id="c-count" class="tag"></span>
-            </div>
-            <input id="c-search" type="search" placeholder="Search…" />
+      <!-- Commissions -->
+      <div class="win hidden" id="win-commissions">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Commissions</div>
+        </div>
+        <div class="content">
+          <div id="commissions-app" style="display:flex; width:100%;">
+            <aside style="width:220px; border-right:1px solid #1e2b4d; padding:10px;">
+              <div style="font-weight:700; margin-bottom:8px;">Filters</div>
+              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-open" type="checkbox" checked> Open</label>
+              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-acc"  type="checkbox" checked> Accepted</label>
+              <label style="display:flex; gap:8px; align-items:center;"><input id="c-f-done" type="checkbox" checked> Done</label>
+              <hr />
+              <button id="c-new">+ New Mock Brief</button>
+            </aside>
+            <main style="flex:1; display:flex; flex-direction:column;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px;">
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <strong>Commissions</strong>
+                  <span id="c-count" class="tag"></span>
+                </div>
+                <input id="c-search" type="search" placeholder="Search…" />
+              </div>
+              <div id="c-list" style="padding:10px; display:flex; flex-direction:column; gap:8px; overflow:auto;"></div>
+            </main>
           </div>
-          <div id="c-list" style="padding:10px; display:flex; flex-direction:column; gap:8px; overflow:auto;"></div>
-        </main>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Cash Tracker -->
-  <div class="win hidden" id="win-cash">
-    <div class="titlebar">
-      <div class="btn btn-close" data-close></div>
-      <div class="btn btn-min" data-min></div>
-      <div class="btn btn-max" data-max></div>
-      <div class="title">Cash Tracker</div>
-    </div>
-    <div class="content">
-      <div id="cash-app" style="display:flex; width:100%;">
-        <aside style="width:260px; border-right:1px solid #1e2b4d; padding:10px; display:flex; flex-direction:column; gap:10px;">
-          <div style="font-weight:700;">Actions</div>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <label>New expense</label>
-            <input id="cash-exp-label" placeholder="Label (e.g. Rent, Fonts)" />
-            <input id="cash-exp-amt" type="number" placeholder="Amount" />
-            <button id="cash-add-exp">Add Expense</button>
+      <!-- Cash Tracker -->
+      <div class="win hidden" id="win-cash">
+        <div class="titlebar">
+          <div class="btn btn-close" data-close></div>
+          <div class="btn btn-min" data-min></div>
+          <div class="btn btn-max" data-max></div>
+          <div class="title">Cash Tracker</div>
+        </div>
+        <div class="content">
+          <div id="cash-app" style="display:flex; width:100%;">
+            <aside style="width:260px; border-right:1px solid #1e2b4d; padding:10px; display:flex; flex-direction:column; gap:10px;">
+              <div style="font-weight:700;">Actions</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label>New expense</label>
+                <input id="cash-exp-label" placeholder="Label (e.g. Rent, Fonts)" />
+                <input id="cash-exp-amt" type="number" placeholder="Amount" />
+                <button id="cash-add-exp">Add Expense</button>
+              </div>
+              <hr />
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label>Quick expenses</label>
+                <button data-qexp="Rent:300">Pay Rent ($300)</button>
+                <button data-qexp="Coffee:6">Coffee ($6)</button>
+                <button data-qexp="Stock photos:25">Stock photos ($25)</button>
+              </div>
+              <hr />
+              <button id="cash-reset">Reset Save</button>
+            </aside>
+            <main style="flex:1; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <strong>Balance</strong>
+                  <span id="cash-balance" class="tag"></span>
+                </div>
+                <button id="cash-add-income">Add Test Income</button>
+              </div>
+              <div style="padding:10px; display:flex; flex-direction:column; gap:10px; overflow:auto;">
+                <strong>Recent Activity</strong>
+                <div id="cash-history" style="display:flex; flex-direction:column; gap:8px;"></div>
+              </div>
+            </main>
           </div>
-          <hr />
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <label>Quick expenses</label>
-            <button data-qexp="Rent:300">Pay Rent ($300)</button>
-            <button data-qexp="Coffee:6">Coffee ($6)</button>
-            <button data-qexp="Stock photos:25">Stock photos ($25)</button>
-          </div>
-          <hr />
-          <button id="cash-reset">Reset Save</button>
-        </aside>
-        <main style="flex:1; display:flex; flex-direction:column;">
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
-            <div style="display:flex; gap:12px; align-items:center;">
-              <strong>Balance</strong>
-              <span id="cash-balance" class="tag"></span>
-            </div>
-            <button id="cash-add-income">Add Test Income</button>
-          </div>
-          <div style="padding:10px; display:flex; flex-direction:column; gap:10px; overflow:auto;">
-            <strong>Recent Activity</strong>
-            <div id="cash-history" style="display:flex; flex-direction:column; gap:8px;"></div>
-          </div>
-        </main>
+        </div>
       </div>
-    </div>
-  </div>
+    </div><!-- end .screen -->
+  </div><!-- end .frame -->
 
   <!-- Dialogue overlay -->
   <div id="dialogue-layer" class="dialogue hidden">
@@ -406,7 +419,6 @@
 
   <!-- core scripts -->
   <script src="./js/app.js"></script>
- 
   <script src="./js/assets_browser.js"></script>
   <script src="./js/briefs.js"></script>
   <script src="./js/state.js"></script>
@@ -414,64 +426,69 @@
   <script src="./js/email.js"></script>
   <script src="./js/cash.js"></script>
 
-  <!-- Type tool + fallback renderer + magazine mode -->
-  <!-- Type tool + fallback renderer + magazine mode -->
-<script>
-(function(){
-  const root   = document.getElementById('win-design');
-  const canvas = document.getElementById('canvas');
-  if (!root || !canvas) return;
 
-  const FONTS = ['Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New', 'Trebuchet MS', 'Times New Roman'];
-  let fontIndex = 0;
+  <!-- DESIGN ENGINE (drawing + text + stickers + FREE TRANSFORM) -->
+  <script>
+  (function(){
+    // --- Grab & reset canvas so old listeners are detached ---
+    const oldCanvas = document.getElementById('canvas');
+    if (!oldCanvas) return;
 
-  const fontPrev = document.getElementById('font-prev');
-  const fontNext = document.getElementById('font-next');
-  const fontName = document.getElementById('font-name');
-  const typeBtn  = document.getElementById('type');
-  const colorEl  = document.getElementById('color');
-  const sizeEl   = document.getElementById('size');
+    const canvas = oldCanvas.cloneNode(true);
+    oldCanvas.parentNode.replaceChild(canvas, oldCanvas);
 
-  if (sizeEl) {
-    sizeEl.addEventListener('input', () => {
-      const newSize = Number(sizeEl.value || 16);
-      const hot = window.__designHot;
-      if (!hot || !hot.textItems) return;
-      hot.textItems.forEach(t => {
-        if (t.selected) {
-          t.size = newSize;
-        }
-      });
-    });
-  }
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
 
-  if (fontName) fontName.textContent = FONTS[fontIndex];
-
-  if (!window.__designHot) window.__designHot = {};
-  const hot = window.__designHot;
-
-  if (!hot.booted) {
-    const view = canvas.getContext('2d', {alpha:true});
-
-    // Create the initial offscreen paint layer
+    // Offscreen paint layer for brush strokes
     const paint = document.createElement('canvas');
-    paint.width = canvas.width;
-    paint.height = canvas.height;
+    paint.width = W;
+    paint.height = H;
     const pctx = paint.getContext('2d');
-    pctx.fillStyle = '#faf8e8';
-    pctx.fillRect(0, 0, paint.width, paint.height);
+    pctx.fillStyle = '#111722';   // background
+    pctx.fillRect(0, 0, W, H);
 
-    hot.view  = view;
-hot.paint = paint;
-hot.pctx  = pctx;
+    // UI elements
+    const colorInput = document.getElementById('color');
+    const sizeInput  = document.getElementById('size');
+    const fontLabel  = document.getElementById('font-name');
+    const fontPrev   = document.getElementById('font-prev');
+    const fontNext   = document.getElementById('font-next');
+    const typeBtn    = document.getElementById('type');
 
-hot.tool         = hot.tool || 'pen';
-hot.stickers     = hot.stickers || [];
-hot.textItems    = hot.textItems || [];
-hot.typing       = hot.typing || null;
-hot.linePreview  = hot.linePreview || null;   // line drag preview
-hot.shapePreview = hot.shapePreview || null;  // shape drag preview
-hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
+    if (!window.__designHot) window.__designHot = {};
+    const hot = window.__designHot;
+
+    const FONTS = ['Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New', 'Trebuchet MS', 'Times New Roman'];
+    let fontIndex = 0;
+
+    function updateFontLabel(){
+      if (fontLabel) fontLabel.textContent = FONTS[fontIndex];
+    }
+    updateFontLabel();
+
+    fontPrev?.addEventListener('click', ()=>{
+      fontIndex = (fontIndex - 1 + FONTS.length) % FONTS.length;
+      updateFontLabel();
+    });
+    fontNext?.addEventListener('click', ()=>{
+      fontIndex = (fontIndex + 1) % FONTS.length;
+      updateFontLabel();
+    });
+
+    // Save drawing state on the hot object
+    hot.view  = ctx;
+    hot.paint = paint;
+    hot.pctx  = pctx;
+
+    hot.tool         = hot.tool || 'pen';
+    hot.stickers     = hot.stickers || [];
+    hot.textItems    = hot.textItems || [];
+    hot.typing       = hot.typing || null;
+    hot.linePreview  = hot.linePreview || null;   // line drag preview
+    hot.shapePreview = hot.shapePreview || null;  // shape drag preview
+    hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
 
     function drawTextItem(ctx, t, isPreview=false){
       ctx.save();
@@ -531,42 +548,42 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
       }
 
       if (active==='bucket'){
-        floodFill(x,y, hexToRgba(colorEl?.value || '#ffffff'));
+        floodFill(x,y, hexToRgba(colorInput?.value || '#ffffff'));
         return;
       }
       if (active==='picker'){
         const c = hot.view.getImageData(x,y,1,1).data;
-        if(colorEl) {
-          colorEl.value = `#${[c[0],c[1],c[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+        if(colorInput) {
+          colorInput.value = `#${[c[0],c[1],c[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
         }
         return;
       }
-       if (active === 'shape') {
-      hot.shapePreview = { x1:x, y1:y, x2:x, y2:y };
-      return; // don't start freehand drawing
-    }
-
+      if (active === 'shape') {
+        hot.shapePreview = { x1:x, y1:y, x2:x, y2:y };
+        return;
+      }
       if (active === 'line') {
-    hot.linePreview = { x1:x, y1:y, x2:x, y2:y };
-    return; // don't start freehand drawing
-  }
+        hot.linePreview = { x1:x, y1:y, x2:x, y2:y };
+        return;
+      }
+
       drawing = true;
       last    = {x,y};
       drawDot(x,y, curColor(), curSize());
     });
 
-     window.addEventListener('mouseup', ()=>{
+    window.addEventListener('mouseup', ()=>{
       drawing = false;
       hot.dragTarget = null;
 
-      // ✅ Commit line to paint
+      // Commit line to paint
       if (hot.linePreview) {
         const lp = hot.linePreview;
         drawLine(lp.x1, lp.y1, lp.x2, lp.y2, curColor(), curSize());
         hot.linePreview = null;
       }
 
-      // ✅ Commit shape to paint
+      // Commit shape to paint
       if (hot.shapePreview) {
         const sp = hot.shapePreview;
         let x1 = sp.x1, y1 = sp.y1, x2 = sp.x2, y2 = sp.y2;
@@ -597,7 +614,6 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
       }
     });
 
-
     canvas.addEventListener('mousemove', (e)=>{
       const {x,y}=canvasXY(e);
       if (hot.dragTarget){
@@ -612,7 +628,8 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
           return;
         }
       }
-            // ✅ SHAPE preview: rubber-band rectangle/ellipse
+
+      // SHAPE preview
       if (hot.tool === 'shape' && hot.shapePreview) {
         const sp = hot.shapePreview;
         const x1 = sp.x1;
@@ -620,7 +637,6 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
         let x2 = x;
         let y2 = y;
 
-        // Hold Shift to constrain to perfect square/circle
         if (e.shiftKey) {
           const dx = x2 - x1;
           const dy = y2 - y1;
@@ -636,7 +652,7 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
         return;
       }
 
-      // ✅ LINE preview: rubber-band line
+      // LINE preview
       if (hot.tool === 'line' && hot.linePreview) {
         hot.linePreview.x2 = x;
         hot.linePreview.y2 = y;
@@ -645,13 +661,6 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
 
       if(!drawing) return;
 
-      // ✅ If we're in line mode and have a preview, update the end point
-  if (hot.tool === 'line' && hot.linePreview) {
-    hot.linePreview.x2 = x;
-    hot.linePreview.y2 = y;
-    return;
-  }
-      if(!drawing) return;
       drawLine(last.x,last.y,x,y, curColor(), curSize());
       last = {x,y};
     });
@@ -664,8 +673,8 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
       if (e.key==='Enter'){
         const item = {
           x: hot.typing.x, y: hot.typing.y, text: hot.typing.text,
-          font: FONTS[fontIndex], size: Number(sizeEl?.value || 16),
-          color: colorEl?.value || '#ffffff',
+          font: FONTS[fontIndex], size: Number(sizeInput?.value || 16),
+          color: colorInput?.value || '#ffffff',
           selected:false, w:0, h:0
         };
         hot.textItems.push(item);
@@ -694,10 +703,10 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
       };
     }
     function curColor(){
-      return (hot.tool==='eraser') ? '#faf8e8' : (colorEl?.value || '#000000');
+      return (hot.tool==='eraser') ? '#faf8e8' : (colorInput?.value || '#000000');
     }
     function curSize(){
-      return Number(sizeEl?.value || 3);
+      return Number(sizeInput?.value || 3);
     }
     function drawDot(x,y,color,size){
       hot.pctx.fillStyle = color;
@@ -765,27 +774,27 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
     }
 
     function render() {
-      view.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (hot.paint) {
-        view.drawImage(hot.paint, 0, 0);
+        ctx.drawImage(hot.paint, 0, 0);
       }
 
       for (const s of hot.stickers) {
         const cw = s.w * s.scale, ch = s.h * s.scale;
         const x = s.x - cw / 2,   y = s.y - ch / 2;
-        view.drawImage(s.img, x, y, cw, ch);
+        ctx.drawImage(s.img, x, y, cw, ch);
         if (s.selected) {
-          view.save();
-          view.strokeStyle = '#7bdcff';
-          view.setLineDash([6, 4]);
-          view.lineWidth = 2;
-          view.strokeRect(x, y, cw, ch);
-          view.restore();
+          ctx.save();
+          ctx.strokeStyle = '#7bdcff';
+          ctx.setLineDash([6, 4]);
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, cw, ch);
+          ctx.restore();
         }
       }
 
-      for (const t of hot.textItems) drawTextItem(view, t);
+      for (const t of hot.textItems) drawTextItem(ctx, t);
 
       if (hot.typing) {
         const preview = {
@@ -793,72 +802,104 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
           y: hot.typing.y,
           text: hot.typing.text || '',
           font: FONTS[fontIndex],
-          size: Number(sizeEl?.value || 16),
-          color: colorEl?.value || '#ffffff',
+          size: Number(sizeInput?.value || 16),
+          color: colorInput?.value || '#ffffff',
           selected: false
         };
-        drawTextItem(view, preview, true);
-        view.save();
-        view.fillStyle = preview.color;
-        const w = view.measureText(preview.text).width;
-        view.fillRect(preview.x + w + 1, preview.y, 1, preview.size * 1.2);
-        view.restore();
+        drawTextItem(ctx, preview, true);
+        ctx.save();
+        ctx.fillStyle = preview.color;
+        const w = ctx.measureText(preview.text).width;
+        ctx.fillRect(preview.x + w + 1, preview.y, 1, preview.size * 1.2);
+        ctx.restore();
       }
-// At the end of render(), before requestAnimationFrame(render):
-      // ✅ SHAPE preview overlay
+
+      // SHAPE preview overlay
       if (hot.shapePreview) {
         const sp  = hot.shapePreview;
-        const ctx = hot.view;
+        const c   = ctx;
         let x1 = sp.x1, y1 = sp.y1, x2 = sp.x2, y2 = sp.y2;
         let left = Math.min(x1, x2);
         let top  = Math.min(y1, y2);
         let w    = Math.abs(x2 - x1);
         let h    = Math.abs(y2 - y1);
 
-        ctx.save();
-        ctx.strokeStyle = colorEl?.value || '#000000';
-        ctx.lineWidth   = Number(sizeEl?.value || 3) * 2;
-        ctx.setLineDash([4,4]);
-        ctx.beginPath();
+        c.save();
+        c.strokeStyle = colorInput?.value || '#000000';
+        c.lineWidth   = Number(sizeInput?.value || 3) * 2;
+        c.setLineDash([4,4]);
+        c.beginPath();
         if (hot.shapeMode === 'circle') {
           const cx = left + w / 2;
           const cy = top  + h / 2;
           const rx = w / 2;
           const ry = h / 2;
-          ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+          c.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
         } else {
-          ctx.rect(left, top, w, h);
+          c.rect(left, top, w, h);
         }
-        ctx.stroke();
-        ctx.restore();
+        c.stroke();
+        c.restore();
       }
 
-      // ✅ LINE preview overlay
+      // LINE preview overlay
       if (hot.linePreview) {
         const lp = hot.linePreview;
-        const ctx = hot.view;
-        ctx.save();
-        ctx.strokeStyle = colorEl?.value || '#000000';
-        ctx.lineWidth   = Number(sizeEl?.value || 3) * 2;
-        ctx.lineCap     = 'round';
-        ctx.setLineDash([4,4]);
-        ctx.beginPath();
-        ctx.moveTo(lp.x1, lp.y1);
-        ctx.lineTo(lp.x2, lp.y2);
-        ctx.stroke();
-        ctx.restore();
+        const c = ctx;
+        c.save();
+        c.strokeStyle = colorInput?.value || '#000000';
+        c.lineWidth   = Number(sizeInput?.value || 3) * 2;
+        c.lineCap     = 'round';
+        c.setLineDash([4,4]);
+        c.beginPath();
+        c.moveTo(lp.x1, lp.y1);
+        c.lineTo(lp.x2, lp.y2);
+        c.stroke();
+        c.restore();
       }
-
 
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
+  })();
+  </script>
 
-    hot.booted = true;
-  }
+  <!-- Type tool + magazine mode + tool wiring -->
+  <script>
+  (function(){
+    const root   = document.getElementById('win-design');
+    const canvas = document.getElementById('canvas');
+    if (!root || !canvas) return;
 
-  // === Magazine mode helper ===
-   window.setMagazineMode = function(enabled){
+    const FONTS = ['Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New', 'Trebuchet MS', 'Times New Roman'];
+    let fontIndex = 0;
+
+    const fontPrev = document.getElementById('font-prev');
+    const fontNext = document.getElementById('font-next');
+    const fontName = document.getElementById('font-name');
+    const typeBtn  = document.getElementById('type');
+    const colorEl  = document.getElementById('color');
+    const sizeEl   = document.getElementById('size');
+
+    if (sizeEl) {
+      sizeEl.addEventListener('input', () => {
+        const hot = window.__designHot;
+        if (!hot || !hot.textItems) return;
+        hot.textItems.forEach(t => {
+          if (t.selected) {
+            t.size = Number(sizeEl.value || 16);
+          }
+        });
+      });
+    }
+
+    if (fontName) fontName.textContent = FONTS[fontIndex];
+
+    if (!window.__designHot) window.__designHot = {};
+    const hot = window.__designHot;
+
+    // === Magazine mode helper ===
+    window.setMagazineMode = function(enabled){
   const canvas = document.getElementById('canvas');
   const hot    = window.__designHot;
   if (!canvas || !hot) return;
@@ -873,12 +914,13 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
 
   // Resize visible CSS box
   if (enabled) {
+    // magazine mode: tall page
     canvas.style.width  = '500px';
     canvas.style.height = '800px';
   } else {
-    // normal design mode size — adjust if you'd like
-    canvas.style.width  = '900px';
-    canvas.style.height = '500px';
+    // normal mode: fill the whole canvas frame
+    canvas.style.width  = '100%';
+    canvas.style.height = '100%';
   }
 
   // Resize offscreen paint canvas
@@ -898,73 +940,69 @@ hot.shapeMode    = hot.shapeMode || 'rect';   // 'rect' or 'circle'
 };
 
 
+    function setTool(name){
+      hot.tool = name;
+      const ids = ['pen','bucket','type','eraser','shape','open-assets','line','move','undo','picker','clear','upload'];
+      ids.forEach(id=>{
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        const toolName =
+          id === 'pen'   ? 'pen'   :
+          id === 'bucket'? 'bucket':
+          id === 'type'  ? 'type'  :
+          id === 'eraser'? 'eraser':
+          id === 'picker'? 'picker':
+          id === 'move'  ? 'move'  :
+          id === 'line'  ? 'line'  :
+          id === 'shape' ? 'shape' :
+          null;
+        btn.classList.toggle('active', toolName === name);
+      });
+    }
 
+    document.getElementById('pen')   ?.addEventListener('click', ()=> setTool('pen'));
+    document.getElementById('eraser')?.addEventListener('click', ()=> setTool('eraser'));
+    document.getElementById('bucket')?.addEventListener('click', ()=> setTool('bucket'));
+    document.getElementById('picker')?.addEventListener('click', ()=> setTool('picker'));
+    document.getElementById('move')  ?.addEventListener('click', ()=> setTool('move'));
+    document.getElementById('line')  ?.addEventListener('click', ()=> setTool('line'));
+    typeBtn?.addEventListener('click', ()=> setTool('type'));
+    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='t') setTool('type'); });
 
-function setTool(name){
-  hot.tool = name;
-  const ids = ['pen','bucket','type','eraser','shape','open-assets','line','move','undo','picker','clear','upload'];
-  ids.forEach(id=>{
-    const btn = document.getElementById(id);
-    if (!btn) return;
-    const toolName =
-      id === 'pen'   ? 'pen'   :
-      id === 'bucket'? 'bucket':
-      id === 'type'  ? 'type'  :
-      id === 'eraser'? 'eraser':
-      id === 'picker'? 'picker':
-      id === 'move'  ? 'move'  :
-      id === 'line'  ? 'line'  :
-      id === 'shape' ? 'shape' :
-      null;
-    btn.classList.toggle('active', toolName === name);
-  });
-}
+    const shapeBtn = document.getElementById('shape');
+    shapeBtn?.addEventListener('click', ()=>{
+      const choice = window.prompt(
+        'Choose shape:\n- type "c" for circle/ellipse\n- type "s" for square/rectangle',
+        'c'
+      );
 
+      if (choice && choice.toLowerCase().startsWith('c')) {
+        hot.shapeMode = 'circle';
+      } else {
+        hot.shapeMode = 'rect';
+      }
 
+      setTool('shape');
+    });
 
-  document.getElementById('pen')   ?.addEventListener('click', ()=> setTool('pen'));
-  document.getElementById('eraser')?.addEventListener('click', ()=> setTool('eraser'));
-  document.getElementById('bucket')?.addEventListener('click', ()=> setTool('bucket'));
-  document.getElementById('picker')?.addEventListener('click', ()=> setTool('picker'));
-  document.getElementById('move')  ?.addEventListener('click', ()=> setTool('move'));
-  document.getElementById('line')  ?.addEventListener('click', ()=> setTool('line'));
-  typeBtn?.addEventListener('click', ()=> setTool('type'));
-  window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='t') setTool('type'); });
-const shapeBtn = document.getElementById('shape');
-shapeBtn?.addEventListener('click', ()=>{
-  // Small popup to choose between circle or square
-  const choice = window.prompt(
-    'Choose shape:\n- type "c" for circle/ellipse\n- type "s" for square/rectangle',
-    'c'
-  );
-
-  if (choice && choice.toLowerCase().startsWith('c')) {
-    hot.shapeMode = 'circle';
-  } else {
-    hot.shapeMode = 'rect';
-  }
-
-  setTool('shape');
-});
-
-  function updateFontLabel(){
-    if(fontName) fontName.textContent = (window.__designHotFont || 'Arial');
-  }
-  window.__designHotFont = FONTS[fontIndex];
-  updateFontLabel();
-
-  fontPrev?.addEventListener('click', ()=>{
-    fontIndex = (fontIndex - 1 + FONTS.length) % FONTS.length;
+    function updateFontLabel(){
+      if(fontName) fontName.textContent = (window.__designHotFont || 'Arial');
+    }
     window.__designHotFont = FONTS[fontIndex];
     updateFontLabel();
-  });
-  fontNext?.addEventListener('click', ()=>{
-    fontIndex = (fontIndex + 1) % FONTS.length;
-    window.__designHotFont = FONTS[fontIndex];
-    updateFontLabel();
-  });
-})();
-</script>
+
+    fontPrev?.addEventListener('click', ()=>{
+      fontIndex = (fontIndex - 1 + FONTS.length) % FONTS.length;
+      window.__designHotFont = FONTS[fontIndex];
+      updateFontLabel();
+    });
+    fontNext?.addEventListener('click', ()=>{
+      fontIndex = (fontIndex + 1) % FONTS.length;
+      window.__designHotFont = FONTS[fontIndex];
+      updateFontLabel();
+    });
+  })();
+  </script>
 
   <!-- Sticker helpers -->
   <script>
@@ -999,71 +1037,67 @@ shapeBtn?.addEventListener('click', ()=>{
   })();
   </script>
 
-  <!-- Design UI wiring for new layout (including Upload completion trigger) -->
   <!-- Design UI wiring for new layout (Upload = submit design only) -->
-<script>
-(function(){
-  const hot        = (window.__designHot ||= {});
-  const colorInput = document.getElementById('color');
-
-  // Color swatches -> hidden color input
-  document.querySelectorAll('.swatch').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const c = btn.dataset.color;
-      if (colorInput) colorInput.value = c;
-    });
-  });
-
-  // Clear: wipe canvas + remove stickers/text
-  document.getElementById('clear')?.addEventListener('click', ()=>{
-    const h = window.__designHot;
-    if (!h || !h.pctx || !h.paint) return;
-    h.pctx.fillStyle = '#faf8e8';
-    h.pctx.fillRect(0,0,h.paint.width,h.paint.height);
-    if (h.stickers)  h.stickers.length  = 0;
-    if (h.textItems) h.textItems.length = 0;
-  });
-
-  // Undo: last text OR last sticker
-  document.getElementById('undo')?.addEventListener('click', ()=>{
-    const h = window.__designHot;
-    if (!h) return;
-    if (h.textItems && h.textItems.length){
-      h.textItems.pop();
-      return;
-    }
-    if (h.stickers && h.stickers.length){
-      h.stickers.pop();
-      return;
-    }
-    alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
-  });
-
-  // Upload = submit design to client (no file upload)
+  <script>
   (function(){
-    const uploadBtn = document.getElementById('upload');
-    if (!uploadBtn) return;
+    const hot        = (window.__designHot ||= {});
+    const colorInput = document.getElementById('color');
 
-    uploadBtn.addEventListener('click', () => {
-      // Pure "submit design" action – no file picker
-      if (
-        window.flowerHausJobActive &&
-        !window.flowerHausJobComplete &&
-        typeof window.startFlowerHausCompleteDialogue === 'function'
-      ) {
-        const ok = confirm('Submit this design to the client?');
-        if (ok) {
-          window.startFlowerHausCompleteDialogue();
-        }
-      } else {
-        alert('There is no active client brief to submit to yet.');
-      }
+    // Color swatches -> hidden color input
+    document.querySelectorAll('.swatch').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const c = btn.dataset.color;
+        if (colorInput) colorInput.value = c;
+      });
     });
+
+    // Clear: wipe canvas + remove stickers/text
+    document.getElementById('clear')?.addEventListener('click', ()=>{
+      const h = window.__designHot;
+      if (!h || !h.pctx || !h.paint) return;
+      h.pctx.fillStyle = '#faf8e8';
+      h.pctx.fillRect(0,0,h.paint.width,h.paint.height);
+      if (h.stickers)  h.stickers.length  = 0;
+      if (h.textItems) h.textItems.length = 0;
+    });
+
+    // Undo: last text OR last sticker
+    document.getElementById('undo')?.addEventListener('click', ()=>{
+      const h = window.__designHot;
+      if (!h) return;
+      if (h.textItems && h.textItems.length){
+        h.textItems.pop();
+        return;
+      }
+      if (h.stickers && h.stickers.length){
+        h.stickers.pop();
+        return;
+      }
+      alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
+    });
+
+    // Upload = submit design to client (no file upload)
+    (function(){
+      const uploadBtn = document.getElementById('upload');
+      if (!uploadBtn) return;
+
+      uploadBtn.addEventListener('click', () => {
+        if (
+          window.flowerHausJobActive &&
+          !window.flowerHausJobComplete &&
+          typeof window.startFlowerHausCompleteDialogue === 'function'
+        ) {
+          const ok = confirm('Submit this design to the client?');
+          if (ok) {
+            window.startFlowerHausCompleteDialogue();
+          }
+        } else {
+          alert('There is no active client brief to submit to yet.');
+        }
+      });
+    })();
   })();
-
-})();
-</script>
-
+  </script>
 
   <!-- Web app logic (with color theory + back button) -->
   <script>
@@ -1238,8 +1272,7 @@ shapeBtn?.addEventListener('click', ()=>{
   })();
   </script>
 
-  
-   <!-- Asset browser wiring: asset_1–asset_20 -->
+  <!-- Asset browser wiring: asset_1–asset_20 -->
   <script>
   (function () {
     const openBtn     = document.getElementById('open-assets');
@@ -1249,8 +1282,6 @@ shapeBtn?.addEventListener('click', ()=>{
 
     if (!openBtn || !win || !grid) return;
 
-    // Preloaded assets: asset_1.png ... asset_20.png
-    // Adjust the path/extension if yours are different
     const ASSETS = Array.from({ length: 20 }, (_, i) => {
       const n = i + 1;
       return {
@@ -1283,7 +1314,6 @@ shapeBtn?.addEventListener('click', ()=>{
           `;
 
           btn.addEventListener('click', () => {
-            // Drop this asset into the design canvas as a sticker
             if (typeof window.addStickerFromURL === 'function') {
               window.addStickerFromURL(asset.url);
             } else if (typeof window.addStickerImage === 'function') {
@@ -1298,142 +1328,142 @@ shapeBtn?.addEventListener('click', ()=>{
     }
 
     function openWindow() {
-  win.classList.remove('hidden');
-  win.style.display = 'block';
-  renderAssets();
+      win.classList.remove('hidden');
+      win.style.display = 'block';
+      renderAssets();
 
-  // ⭐ ALWAYS bring asset window to front
-  win.style.zIndex = 99999;
-}
-
+      // Always bring asset window to front
+      win.style.zIndex = 99999;
+    }
 
     openBtn.addEventListener('click', openWindow);
     filterInput?.addEventListener('input', renderAssets);
   })();
   </script>
-<script>
-(function () {
-  const sizeEl = document.getElementById('size');
-  if (!sizeEl) return;
 
-  sizeEl.addEventListener('input', () => {
-    const hot = window.__designHot;
-    if (!hot || !Array.isArray(hot.stickers)) return;
+  <!-- Slider also controls selected sticker scale -->
+  <script>
+  (function () {
+    const sizeEl = document.getElementById('size');
+    if (!sizeEl) return;
 
-    // Find selected stickers (assets)
-    const selected = hot.stickers.filter(s => s.selected);
-    if (!selected.length) {
-      // nothing selected → do nothing extra;
-      // brush + text still respond to the slider via existing code
-      return;
+    sizeEl.addEventListener('input', () => {
+      const hot = window.__designHot;
+      if (!hot || !Array.isArray(hot.stickers)) return;
+
+      const selected = hot.stickers.filter(s => s.selected);
+      if (!selected.length) return;
+
+      const v = Number(sizeEl.value || 1);
+      const scale = Math.max(0.2, Math.min(3, v / 10));
+
+      selected.forEach(s => {
+        s.scale = scale;
+      });
+    });
+  })();
+  </script>
+
+  <!-- Background music (no mute button) -->
+  <audio id="bgm" src="./assets/audio/title_music.mp3" loop></audio>
+
+  <!-- Title → Explanation → Game flow + music -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const frame             = document.querySelector('.frame');
+    const titleScreen       = document.getElementById('title-screen');
+    const explanationScreen = document.getElementById('explanation-screen');
+    const playBtn           = document.getElementById('title-play-btn'); // Play Game button
+    const bgm               = document.getElementById('bgm');
+
+    // Start state: show title, hide game + explanation
+    if (frame) frame.style.display = 'none';
+    if (titleScreen) titleScreen.classList.remove('hidden');
+    if (explanationScreen) explanationScreen.classList.add('hidden');
+
+    function startMusic() {
+      if (!bgm) return;
+      bgm.volume = 0.5;
+      bgm.play().catch(err => {
+        console.log('Audio play blocked until user gesture:', err);
+      });
     }
 
-    const v = Number(sizeEl.value || 1);
-    // Map slider 1–32 → scale about 0.2–3
-    const scale = Math.max(0.2, Math.min(3, v / 10));
+    // STEP 1: Play Game → explanation PNG
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        if (titleScreen) titleScreen.classList.add('hidden');
+        if (explanationScreen) explanationScreen.classList.remove('hidden');
+        startMusic();
+      });
+    }
 
-    selected.forEach(s => {
-      s.scale = scale;
-    });
+    // STEP 2: Click explanation → into the game
+    if (explanationScreen && frame) {
+      explanationScreen.addEventListener('click', () => {
+        explanationScreen.classList.add('hidden');
+        frame.style.display = 'block';
+      });
+    }
   });
-})();
-</script>
+  </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const frame             = document.querySelector('.frame');
-  const titleScreen       = document.getElementById('title-screen');
-  const explanationScreen = document.getElementById('explanation-screen');
-  const playBtn           = document.getElementById('title-play-btn'); // your Play Game button
-  const bgm               = document.getElementById('bgm');
-  const bgmToggle         = document.getElementById('bgm-toggle');
+  <!-- Clamp windows inside the fake screen after dragging -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const screen = document.getElementById('screen');
+    if (!screen) return;
 
-  let bgmOn = true;
+    function clampWindow(win) {
+      const parent = win.offsetParent || screen;
+      const maxX = parent.clientWidth  - win.offsetWidth;
+      const maxY = parent.clientHeight - win.offsetHeight;
 
-  // Start state: show title, hide game + explanation
-  if (frame) frame.style.display = 'none';
-  if (titleScreen) titleScreen.classList.remove('hidden');
-  if (explanationScreen) explanationScreen.classList.add('hidden');
+      let left = win.offsetLeft;
+      let top  = win.offsetTop;
 
-  function startMusic() {
-    if (!bgm) return;
-    bgm.volume = 0.5;
-    bgm.play().catch(err => {
-      console.log('Audio play blocked until user gesture:', err);
-    });
-  }
+      if (maxX < 0 || maxY < 0) return; // window bigger than screen
 
-  // STEP 1: Play Game → explanation PNG
-  if (playBtn) {
-    playBtn.addEventListener('click', () => {
-      // Hide title screen
-      if (titleScreen) titleScreen.classList.add('hidden');
-      // Show explanation overlay
-      if (explanationScreen) explanationScreen.classList.remove('hidden');
-      // Start music here if you want it during explanation
-      startMusic();
-    });
-  }
+      if (left < 0) left = 0;
+      if (top  < 0) top  = 0;
+      if (left > maxX) left = maxX;
+      if (top  > maxY) top  = maxY;
 
-  // STEP 2: Click explanation → into the game
-  if (explanationScreen && frame) {
-    explanationScreen.addEventListener('click', () => {
-      explanationScreen.classList.add('hidden');
-      frame.style.display = 'block';
-    });
-  }
+      win.style.left = left + 'px';
+      win.style.top  = top  + 'px';
+    }
 
-  // Mute / unmute music
-  if (bgmToggle && bgm) {
-    bgmToggle.addEventListener('click', () => {
-      bgmOn = !bgmOn;
-      bgm.muted = !bgmOn;
-      bgmToggle.textContent = bgmOn ? '🔊 Mute' : '🔈 Unmute';
-    });
-  }
-});
-</script>
+    function clampAllWindows() {
+      document.querySelectorAll('.win').forEach(w => {
+        if (!w.classList.contains('hidden')) clampWindow(w);
+      });
+    }
 
-<!-- Background music (hidden) -->
-<audio id="bgm" src="./assets/audio/title_music.mp3" loop></audio>
-<button id="bgm-toggle">🔊 Mute</button>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const frame            = document.querySelector('.frame');
-  const titleScreen      = document.getElementById('title-screen');
-  const explanationScreen= document.getElementById('explanation-screen');
-  const playBtn          = document.getElementById('btn-play');
-  const explanationBtn   = document.getElementById('btn-explanation');
+    // After any mouseup (drag stop), snap windows fully inside the blue screen
+    window.addEventListener('mouseup', clampAllWindows);
 
-  // Safety checks
-  if (!frame || !titleScreen || !playBtn) return;
-
-  // Start: show title, hide game + explanation
-  frame.style.display = 'none';
-  titleScreen.classList.remove('hidden');
-  if (explanationScreen) explanationScreen.classList.add('hidden');
-
-  // Play Game → hide title, show main game UI
-  playBtn.addEventListener('click', () => {
-    titleScreen.classList.add('hidden');
-    if (explanationScreen) explanationScreen.classList.add('hidden');
-    frame.style.display = 'block';
+    // Also clamp once at startup in case defaults are off-screen
+    clampAllWindows();
   });
-
-  // Explanation button → show explanation screen
-  if (explanationBtn && explanationScreen) {
-    explanationBtn.addEventListener('click', () => {
-      titleScreen.classList.add('hidden');
-      explanationScreen.classList.remove('hidden');
-    });
-
-    // Click anywhere on explanation page → back to title screen
-    explanationScreen.addEventListener('click', () => {
-      explanationScreen.classList.add('hidden');
-      titleScreen.classList.remove('hidden');
-    });
-  }
-});
-</script>
+  </script>
+  <script>
+    (function () {
+      const briefsList = document.getElementById('briefs-list');
+      if (!briefsList) return;
+  
+      briefsList.innerHTML = `
+        <div class="briefs-expl-wrap">
+          <img
+            src="./assets/ui/explanation_page.png"
+            alt="Explanation Page"
+            class="briefs-expl-img"
+          />
+        </div>
+      `;
+    })();
+  </script>
+  
+  
+    
 </body>
 </html>
