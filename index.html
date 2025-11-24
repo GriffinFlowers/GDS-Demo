@@ -53,7 +53,7 @@
         </button>
 
         <button class="icon" data-open="#win-notes">
-          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
+          <img src="./assets/ui/note_pad.png" alt="note_pad">
           <span class="icon-label">Notes</span>
         </button>
 
@@ -67,10 +67,6 @@
           <span class="icon-label">Cash</span>
         </button>
 
-        <button class="icon" data-open="#win-asset-browser">
-          <img src="./assets/ui/checkerboard copy.png" alt="checkerboard">
-          <span class="icon-label">checkerboard</span>
-        </button>
       </div>
 
       <!-- Email -->
@@ -313,89 +309,99 @@
       </div>
 
       <!-- Commissions -->
-      <div class="win hidden" id="win-commissions">
-        <div class="titlebar">
-          <div class="btn btn-close" data-close></div>
-          <div class="btn btn-min" data-min></div>
-          <div class="btn btn-max" data-max></div>
-          <div class="title">Commissions</div>
+<div class="win hidden" id="win-commissions">
+  <div class="titlebar">
+    <div class="btn btn-close" data-close></div>
+    <div class="btn btn-min" data-min></div>
+    <div class="btn btn-max" data-max></div>
+    <div class="title">Commissions</div>
+  </div>
+  <div class="content">
+    <div id="commissions-app" class="comm-shell">
+      <!-- LEFT: list of commissions -->
+      <aside class="comm-list-pane">
+        <h1 class="comm-title">Paid Commissions</h1>
+        <div id="comm-list" class="comm-list">
+          <!-- JS will inject up to 10 briefs here -->
         </div>
-        <div class="content">
-          <<div id="commissions-app" class="comm-shell">
-            <!-- LEFT: list of commissions -->
-            <aside class="comm-list-pane">
-              <h1 class="comm-title">Paid Commissions</h1>
-              <div id="comm-list" class="comm-list">
-                <!-- JS will inject up to 10 briefs here -->
-              </div>
-            </aside>
-          
-            <!-- RIGHT: detail view -->
-            <main class="comm-detail-pane">
-              <div class="comm-detail-card">
-                <div id="comm-detail-main" class="comm-detail-main">
-                  <p class="comm-empty">
-                    Select a commission on the left to view the full brief.
-                  </p>
-                </div>
-          
-                <div class="comm-detail-actions">
-                  <button id="comm-accept" class="comm-btn comm-btn-accept" disabled>
-                    Accept
-                  </button>
-                  <button id="comm-decline" class="comm-btn comm-btn-decline" disabled>
-                    Decline
-                  </button>
-                </div>
-              </div>
-            </main>
-          </div>
-          
+      </aside>
 
-      <!-- Cash Tracker -->
-      <div class="win hidden" id="win-cash">
-        <div class="titlebar">
-          <div class="btn btn-close" data-close></div>
-          <div class="btn btn-min" data-min></div>
-          <div class="btn btn-max" data-max></div>
-          <div class="title">Cash Tracker</div>
-        </div>
-        <div class="content">
-          <div id="cash-app" style="display:flex; width:100%;">
-            <aside style="width:260px; border-right:1px solid #1e2b4d; padding:10px; display:flex; flex-direction:column; gap:10px;">
-              <div style="font-weight:700;">Actions</div>
-              <div style="display:flex; flex-direction:column; gap:6px;">
-                <label>New expense</label>
-                <input id="cash-exp-label" placeholder="Label (e.g. Rent, Fonts)" />
-                <input id="cash-exp-amt" type="number" placeholder="Amount" />
-                <button id="cash-add-exp">Add Expense</button>
-              </div>
-              <hr />
-              <div style="display:flex; flex-direction:column; gap:6px;">
-                <label>Quick expenses</label>
-                <button data-qexp="Rent:300">Pay Rent ($300)</button>
-                <button data-qexp="Coffee:6">Coffee ($6)</button>
-                <button data-qexp="Stock photos:25">Stock photos ($25)</button>
-              </div>
-              <hr />
-              <button id="cash-reset">Reset Save</button>
-            </aside>
-            <main style="flex:1; display:flex; flex-direction:column;">
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
-                <div style="display:flex; gap:12px; align-items:center;">
-                  <strong>Balance</strong>
-                  <span id="cash-balance" class="tag"></span>
-                </div>
-                <button id="cash-add-income">Add Test Income</button>
-              </div>
-              <div style="padding:10px; display:flex; flex-direction:column; gap:10px; overflow:auto;">
-                <strong>Recent Activity</strong>
-                <div id="cash-history" style="display:flex; flex-direction:column; gap:8px;"></div>
-              </div>
-            </main>
+      <!-- RIGHT: detail view -->
+      <main class="comm-detail-pane">
+        <div class="comm-detail-card">
+          <div id="comm-detail-main" class="comm-detail-main">
+            <p class="comm-empty">
+              Select a commission on the left to view the full brief.
+            </p>
+          </div>
+
+          <div class="comm-detail-actions">
+            <button id="comm-accept" class="comm-btn comm-btn-accept" disabled>
+              Accept
+            </button>
+            <button id="comm-decline" class="comm-btn comm-btn-decline" disabled>
+              Decline
+            </button>
           </div>
         </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- Cash Tracker -->
+<div class="win hidden" id="win-cash">
+  <div class="titlebar">
+    <div class="btn btn-close" data-close></div>
+    <div class="btn btn-min" data-min></div>
+    <div class="btn btn-max" data-max></div>
+    <div class="title">Cash Tracker</div>
+  </div>
+
+  <div class="content">
+    <div id="cash-app" class="cash-shell">
+      <header class="cash-header">Cash Tracker</header>
+
+      <div class="cash-main">
+        <!-- LEFT: balance + transactions -->
+        <section class="cash-panel cash-panel-left">
+          <h2 class="cash-subtitle">Transactions</h2>
+
+          <div class="cash-balance-row">
+            <span class="cash-balance-label">Total:</span>
+            <span id="cash-balance" class="cash-balance-amount">$0.00</span>
+          </div>
+
+          <div id="cash-history" class="cash-history">
+            <!-- JS will render transactions here -->
+          </div>
+        </section>
+
+        <!-- RIGHT: rent panel -->
+        <section class="cash-panel cash-panel-right">
+          <h2 class="cash-subtitle">Pay Rent</h2>
+
+          <p class="cash-rent-copy">
+            Keep up with your bills by paying rent from your project income.
+          </p>
+
+          <div class="cash-rent-row">
+            <span class="cash-rent-label">Rent amount:</span>
+            <span id="cash-rent-amount" class="cash-rent-amount">$300.00</span>
+          </div>
+
+          <button id="cash-pay-rent" class="cash-pay-btn">Pay Rent</button>
+
+          <p id="cash-rent-status" class="cash-rent-status">
+            Status: Rent not paid this cycle.
+          </p>
+        </section>
       </div>
+    </div>
+  </div>
+</div>
+
+
     </div><!-- end .screen -->
   </div><!-- end .frame -->
 
@@ -1052,12 +1058,14 @@
     const colorInput = document.getElementById('color');
   
     // Color swatches -> hidden color input
-    document.querySelectorAll('.swatch').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const c = btn.dataset.color;
-        if (colorInput) colorInput.value = c;
-      });
-    });
+    document.querySelectorAll('.swatch').forEach(btn=>{
+  const c = btn.dataset.color;
+  btn.style.backgroundColor = c;   
+  btn.addEventListener('click', ()=>{
+    if (colorInput) colorInput.value = c;
+  });
+});
+
   
     // Clear: wipe canvas + remove stickers/text
     document.getElementById('clear')?.addEventListener('click', () => {

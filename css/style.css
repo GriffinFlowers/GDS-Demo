@@ -270,7 +270,7 @@ textarea{
 }
 
 .panel {
-  background: #d4d8de;
+  background: #2a589d;
   border-radius: 18px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   overflow: hidden;
@@ -279,7 +279,7 @@ textarea{
 }
 
 .panel-header {
-  background: #c6cbd1;
+  background: #1c4271;
   padding: 6px 10px;
   font-weight: 700;
   text-align: center;
@@ -972,6 +972,189 @@ textarea{
 /* Change all text color inside the right-side commission detail */
 .comm-detail-main {
   color: #111722; /* or whatever color you want */
+}
+
+/* Cash Tracker layout */
+
+#win-cash .content {
+  padding: 0;
+}
+
+.cash-shell {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: #24b643;           /* bright green background */
+  border-radius: 24px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+
+.cash-header {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.cash-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 32px;
+}
+
+/* teal panels */
+
+.cash-panel {
+  background: #2aa8a1;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.cash-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.cash-balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.cash-balance-label {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.cash-balance-amount {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* transactions list */
+
+.cash-history {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cash-history-empty {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cash-tx {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.cash-tx-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cash-tx-label {
+  font-weight: 600;
+}
+
+.cash-tx-amount {
+  font-weight: 600;
+}
+
+.cash-tx-income .cash-tx-amount {
+  color: #bfffd0;
+}
+
+.cash-tx-expense .cash-tx-amount {
+  color: #ffd0cf;
+}
+
+.cash-tx-meta {
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* rent panel */
+
+.cash-rent-copy {
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+
+.cash-rent-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.cash-rent-label {
+  font-size: 14px;
+}
+
+.cash-rent-amount {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.cash-pay-btn {
+  align-self: flex-start;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #1c8040;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.cash-pay-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  background: #f5fff8;
+}
+
+.cash-pay-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cash-rent-status {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 2px solid #0f172a;
+  cursor: pointer;
+  background-color: var(--swatch-color);
+}
+
+.swatch[data-color] {
+  background-color: attr(data-color color);
 }
 
 

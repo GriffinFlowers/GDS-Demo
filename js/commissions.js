@@ -25,7 +25,8 @@
       deliverable: "1 Logo",
       body:
         "We’re Aqua Tech, a surfboard company built on the blend of precision engineering and ocean-born creativity. Our current logo doesn’t fully capture who we’ve grown into, and we’re looking for a fresh mark that reflects the heart of our brand.",
-      status: "open"
+      status: "open",
+      payout: 450
     },
     {
       id: "luna-skate-poster",
@@ -37,7 +38,8 @@
       deliverable: "1 Poster (print + digital)",
       body:
         "We’re hosting a night skate jam under blacklight. We want a bold, high-contrast poster that feels electric and rebellious, but still clearly communicates date, time, and location.",
-      status: "open"
+      status: "open",
+      payout: 300
     },
     {
       id: "neon-diner-menu",
@@ -49,7 +51,8 @@
       deliverable: "Print-ready menu PDF",
       body:
         "Our current menu feels cluttered and hard to read. We’d love a cleaner layout that still leans into our neon, retro-futurist vibe. Strong hierarchy for categories and prices is key.",
-      status: "open"
+      status: "open",
+      payout: 350
     },
     {
       id: "shorebreak-hostel-brand",
@@ -61,7 +64,8 @@
       deliverable: "Logo update + simple brand sheet",
       body:
         "We’re a small surf hostel that has grown a loyal community. We want a refreshed logo and a small brand sheet that helps us stay consistent across our website, stickers, and merch.",
-      status: "open"
+      status: "open",
+      payout: 400
     },
     {
       id: "midnight-radio-cover",
@@ -73,10 +77,11 @@
       deliverable: "Square cover art (3000×3000px)",
       body:
         "Our show is about late-night creativity, music, and conversations. We’re looking for cover art that feels moody but inviting — something that looks great both small in a feed and full-size.",
-      status: "open"
+      status: "open",
+      payout: 275
     }
-    // add more objects here if you want up to 10
   ];
+  
 
   let current = null;
   const itemById = new Map();
@@ -263,6 +268,12 @@ window.markActiveCommissionCompleted = function () {
 
   c.status = "completed";
 
+      // pay the player for the job
+      if (typeof window.cashAddIncome === "function") {
+        const label = `${c.client} – ${c.title}`;
+        window.cashAddIncome(c.payout || 0, label, "job");
+      }
+  
   // Hide the design window and bring Commissions to the front
   const designWin = document.getElementById("win-design");
   const commWin   = document.getElementById("win-commissions");
