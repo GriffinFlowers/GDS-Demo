@@ -1,4 +1,5 @@
 // email.js – brief-style inbox matching the mockup
+
 (function () {
   const listEl    = document.getElementById("m-list");
   const subjEl    = document.getElementById("m-subj");
@@ -8,7 +9,7 @@
 
   if (!listEl || !bodyEl || !appEl) return;
 
-  // ----- DATA: briefs in the inbox -----
+  // ----- DATA: briefs ----- 
   const EMAILS = [
     {
       id: "flower-haus-issue-1",
@@ -35,8 +36,7 @@
     {
       id: "paul-logo-brief",
       subject: "New Brief: Paul’s Computer Co. Logo",
-      body:
-`Client: Paul’s Computer Company
+      body: `Client: Paul’s Computer Company
 Project: New Logo
 Deadline: 2 days
 Deliverable: 1 Logo
@@ -44,6 +44,18 @@ Deliverable: 1 Logo
 We’re Paul’s Computer Company, a small but sharp tech outfit focused on creating machines that blend reliability with thoughtful design.
 
 We want something iconic, geometric, and unmistakable — a mark that looks strong whether printed on a circuit board or glowing on a startup screen.`
+    },
+    {
+      id: "april-art-poster",
+      subject: "New Brief: April’s Art Show Poster",
+      body: `Client: April Greiman
+Project: Experimental Art Show Poster
+Deadline: 4 days
+Deliverable: 1 Poster (digital + print)
+
+I’m hosting a small exhibition of new-media work and I want the poster to feel as experimental as the show itself.
+
+Think bold color, layered typography, and strong use of grid and diagonals — almost like the type and shapes are in motion. It should still clearly communicate the show title, date, time, and location, but everything else can push into expressive, digital, New Wave territory.`
     }
   ];
 
@@ -88,7 +100,6 @@ We want something iconic, geometric, and unmistakable — a mark that looks stro
     if (!email) return;
 
     appEl.classList.add("email-has-selection");
-
     subjEl.textContent = email.subject;
     bodyEl.textContent = email.body;
 
@@ -117,13 +128,13 @@ We want something iconic, geometric, and unmistakable — a mark that looks stro
       statusById[currentId] = "accepted";
       if (window.onBriefAccepted) window.onBriefAccepted(currentId);
 
-      // Block if a commission is already active
+      // Prevent accepting if a commission is active
       if (window.activeCommissionId) {
-        alert("You already have an active commission. Finish that job before accepting a new brief.");
+        alert("You already have an active commission. Finish that first.");
         return;
       }
 
-      // Flower Haus logic
+      // FLOWER HAUS
       if (
         email.id === "flower-haus-issue-1" &&
         typeof window.startFlowerHausDialogue === "function"
@@ -131,12 +142,21 @@ We want something iconic, geometric, and unmistakable — a mark that looks stro
         window.startFlowerHausDialogue();
       }
 
-      // Paul brief logic
+      // PAUL LOGO
       if (email.id === "paul-logo-brief") {
         window.paulJobActive = true;
         window.paulJobComplete = false;
         if (typeof window.startPaulDialogue === "function") {
           window.startPaulDialogue();
+        }
+      }
+
+      // APRIL POSTER
+      if (email.id === "april-art-poster") {
+        window.aprilJobActive = true;
+        window.aprilJobComplete = false;
+        if (typeof window.startAprilDialogue === "function") {
+          window.startAprilDialogue();
         }
       }
 
@@ -153,7 +173,7 @@ We want something iconic, geometric, and unmistakable — a mark that looks stro
     actionsEl.appendChild(declineBtn);
   }
 
-  // ----- INITIAL STATE -----
+  // ----- INITIAL STATE: no text until click -----
   function init() {
     renderList();
     currentId = null;

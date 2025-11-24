@@ -179,7 +179,6 @@
                     <button class="swatch" data-color="#ffffff"></button>
                     <button class="swatch" data-color="#000000"></button>
                   </div>
-
                   <!-- hidden native color input so existing JS still works -->
                   <input type="color" id="color" value="#000000" style="display:none;">
                 </div>
@@ -1052,27 +1051,29 @@
   </script>
 
   <!-- Design UI wiring for new layout (Upload + swatches/clear/undo) -->
+   <!-- Design UI wiring for new layout (Upload = submit design only) -->
 <script>
-  (function(){
+  (function () {
     const hot        = (window.__designHot ||= {});
     const colorInput = document.getElementById('color');
   
-    // Color swatches -> hidden color input
-    document.querySelectorAll('.swatch').forEach(btn=>{
-  const c = btn.dataset.color;
-  btn.style.backgroundColor = c;   
-  btn.addEventListener('click', ()=>{
-    if (colorInput) colorInput.value = c;
-  });
-});
-
+    // Color swatches -> visible colors + hidden color input
+    document.querySelectorAll('.swatch').forEach((btn) => {
+      const c = btn.dataset.color || '#000000';
+      // show the color in the UI
+      btn.style.backgroundColor = c;
+  
+      btn.addEventListener('click', () => {
+        if (colorInput) colorInput.value = c;
+      });
+    });
   
     // Clear: wipe canvas + remove stickers/text
     document.getElementById('clear')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h || !h.pctx || !h.paint) return;
       h.pctx.fillStyle = '#faf8e8';
-      h.pctx.fillRect(0,0,h.paint.width,h.paint.height);
+      h.pctx.fillRect(0, 0, h.paint.width, h.paint.height);
       if (h.stickers)  h.stickers.length  = 0;
       if (h.textItems) h.textItems.length = 0;
     });
@@ -1081,64 +1082,90 @@
     document.getElementById('undo')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h) return;
-      if (h.textItems && h.textItems.length){
+      if (h.textItems && h.textItems.length) {
         h.textItems.pop();
         return;
       }
-      if (h.stickers && h.stickers.length){
+      if (h.stickers && h.stickers.length) {
         h.stickers.pop();
         return;
       }
       alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
     });
-  
-    // 🔹 Upload = submit design to client/commission (no file upload)
-    const uploadBtn = document.getElementById('upload');
-    if (uploadBtn) {
-      uploadBtn.addEventListener('click', () => {
-        let handled = false;
-  
-        // 1) Flower Haus brief
-        if (
-          window.flowerHausJobActive &&
-          !window.flowerHausJobComplete &&
-          typeof window.startFlowerHausCompleteDialogue === 'function'
-        ) {
-          const ok = confirm('Submit this design to the Flower Haus client?');
-          if (ok) {
-            window.startFlowerHausCompleteDialogue();
-            handled = true;
-          }
-        }
-  
-        // 2) Commission job
-        if (!handled &&
-            window.activeCommissionId &&
-            typeof window.markActiveCommissionCompleted === 'function') {
-  
-          const ok = confirm('Submit this design to complete your current commission?');
-          if (ok) {
-            window.markActiveCommissionCompleted(); // calls into commissions.js
-            handled = true;
-          }
-        }
-        if (!handled && window.paulJobActive && !window.paulJobComplete) {
-  const ok = confirm("Submit this design for Paul?");
-  if (ok && typeof window.startPaulCompleteDialogue === "function") {
-    window.startPaulCompleteDialogue();
-    handled = true;
-  }
-}
-
-  
-        // Nothing active
-        if (!handled) {
-          alert('There is no active client brief or commission to submit yet.');
-        }
-      });
-    }
   })();
   </script>
+  
+<!-- Upload = submit design to client/commission (no file upload) -->
+<script>
+  (function(){
+    const uploadBtn = document.getElementById('upload');
+    if (!uploadBtn) return;
+
+    uploadBtn.addEventListener('click', () => {
+      let handled = false;
+
+      // 1) Flower Haus brief
+      if (
+        window.flowerHausJobActive &&
+        !window.flowerHausJobComplete &&
+        typeof window.startFlowerHausCompleteDialogue === 'function'
+      ) {
+        const ok = confirm('Submit this design to the Flower Haus client?');
+        if (ok) {
+          window.startFlowerHausCompleteDialogue();
+          handled = true;
+        }
+      }
+
+      // 2) Paul logo brief
+      if (
+        !handled &&
+        window.paulJobActive &&
+        !window.paulJobComplete &&
+        typeof window.startPaulCompleteDialogue === 'function'
+      ) {
+        const ok = confirm('Submit this design for Paul’s Computer Co. logo?');
+        if (ok) {
+          window.startPaulCompleteDialogue();
+          handled = true;
+        }
+      }
+
+      // 3) April art show poster
+      if (
+        !handled &&
+        window.aprilJobActive &&
+        !window.aprilJobComplete &&
+        typeof window.startAprilCompleteDialogue === 'function'
+      ) {
+        const ok = confirm('Submit this design for April’s art show poster?');
+        if (ok) {
+          window.startAprilCompleteDialogue();
+          handled = true;
+        }
+      }
+
+      // 4) Commission job
+      if (
+        !handled &&
+        window.activeCommissionId &&
+        typeof window.markActiveCommissionCompleted === 'function'
+      ) {
+        const ok = confirm('Submit this design to complete your current commission?');
+        if (ok) {
+          window.markActiveCommissionCompleted();
+          handled = true;
+        }
+      }
+
+      // Nothing active
+      if (!handled) {
+        alert('There is no active client brief or commission to submit yet.');
+      }
+    });
+  })();
+</script>
+
   
 
 
@@ -1215,8 +1242,8 @@
   })();
   </script>
 
-  <!-- Flower Haus dialogue system -->
-  <script>
+  <!-- Flower Haus / Paul / April dialogue system -->
+<script>
   (function () {
     const layer   = document.getElementById("dialogue-layer");
     const faceImg = document.getElementById("dialogue-face");
@@ -1225,72 +1252,118 @@
 
     if (!layer || !faceImg || !textEl || !nameEl) return;
 
+    // ---------- FLOWER HAUS (Griffin) ----------
     const FLOWER_HAUS_BRIEF_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0255.png",
+        face: "./assets/ui/IMG_0211.jpg",
         text:
           "Hey! Thanks for accepting my brief. I know its short notice but this magazine is my love letter to Graphic Design and I need it to be perfect."
       },
       {
-        face: "./assets/ui/IMG_0253.png",
+        face: "./assets/ui/IMG_0212.jpg",
         text:
           "I want the cover to have a calm soothing color scheme, maybe analogous colors? Think strong hierarchy too: Flower Haus needs to read first, then the issue title, then any smaller copy."
       },
       {
-        face: "./assets/ui/IMG_0256.png",
+        face: "./assets/ui/IMG_0213.jpg",
         text:
-          "Visually, I want everything to feel unified. type, illustration, background all related in some way. You can get experimental with everything else, as long as the important information stays clear. Let’s make this cover iconic."
+          "Visually, I want everything to feel unified. Type, illustration, background all related in some way. You can get experimental with everything else, as long as the important information stays clear. Let’s make this cover iconic."
       }
     ];
 
     const FLOWER_HAUS_COMPLETE_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0253.png",
+        face: "./assets/ui/IMG_0212.jpg",
         text:
           "Whoa, that cover looks incredible. It really feels like Flower Haus has its own voice now."
       },
       {
-        face: "./assets/ui/IMG_0256.png",
+        face: "./assets/ui/IMG_0213.jpg",
         text:
           "You nailed the hierarchy and the palette feels so cohesive. This is exactly what I was hoping for."
       },
       {
-        face: "./assets/ui/IMG_0255.png",
+        face: "./assets/ui/IMG_0211.jpg",
         text:
           "I’ve sent over your payment for the job! Consider this cover officially approved. Can’t wait to work with you again."
       }
     ];
+
+    // ---------- PAUL (logo brief) ----------
     const PAUL_ACCEPT_DIALOGUE = [
-  {
-    face: "./assets/ui/Paul_1.png",
-    text: "Ah, thank you for accepting my brief. I’ve been working on computers for decades, but branding… not so much."
-  },
-  {
-    face: "./assets/ui/Paul_2.png",
-    text: "I need a logo that feels modern but isn’t trend-chasing. Something with structure. Something honest. A logo should solve a problem, not decorate it."
-  },
-  {
-    face: "./assets/ui/Paul_3.png",
-    text: "Give me something simple, bold, and unmistakable — the kind of mark that could sit proudly on a motherboard or a magazine cover."
-  }
-];
+      {
+        face: "./assets/ui/Paul_1.png",
+        text:
+          "Thanks for taking this on. I need a mark for my computer company that’s as clear as it is memorable."
+      },
+      {
+        face: "./assets/ui/Paul_2.png",
+        text:
+          "Think in terms of geometry and structure: circles, squares, lines. No decoration for decoration’s sake."
+      },
+      {
+        face: "./assets/ui/Paul_3.png",
+        text:
+          "If it still reads perfectly at the size of a postage stamp, we’re on the right track."
+      }
+    ];
 
-const PAUL_COMPLETE_DIALOGUE = [
-  {
-    face: "./assets/ui/Paul_2.png",
-    text: "Well now… this is exactly the kind of clarity I wanted."
-  },
-  {
-    face: "./assets/ui/Paul_3.png",
-    text: "Strong form, precise balance — it’s a logo with real intelligence. You’ve done fine work."
-  },
-  {
-    face: "./assets/ui/Paul_1.png",
-    text: "Payment has been sent. Let’s continue to make smart design together."
-  }
-];
+    const PAUL_COMPLETE_DIALOGUE = [
+      {
+        face: "./assets/ui/Paul_2.png",
+        text:
+          "That’s exactly the kind of clarity I was hoping for. It feels inevitable, like it’s always existed."
+      },
+      {
+        face: "./assets/ui/Paul_3.png",
+        text:
+          "It sits so well in both positive and negative space. Really strong work."
+      },
+      {
+        face: "./assets/ui/Paul_1.png",
+        text:
+          "Payment’s on its way. Thanks again for the thoughtful design."
+      }
+    ];
 
+    // ---------- APRIL (art show poster) ----------
+    const APRIL_ACCEPT_DIALOGUE = [
+      {
+        face: "./assets/ui/April_1.png",
+        text:
+          "Hi! I’m putting together an art show that mixes print, video, and digital experiments. I need the poster to feel just as experimental."
+      },
+      {
+        face: "./assets/ui/April_2.png",
+        text:
+          "Play with type, grids, and color like they’re living in a digital space — overlaps, diagonals, unexpected scale shifts are all welcome."
+      },
+      {
+        face: "./assets/ui/April_3.png",
+        text:
+          "Just make sure the show title, date, time, and location stay readable. Beyond that, push it as far as you’d like."
+      }
+    ];
 
+    const APRIL_COMPLETE_DIALOGUE = [
+      {
+        face: "./assets/ui/April_2.png",
+        text:
+          "This looks amazing. It feels like the poster itself is in motion."
+      },
+      {
+        face: "./assets/ui/April_3.png",
+        text:
+          "The way you handled type and color really captures the spirit of the show."
+      },
+      {
+        face: "./assets/ui/April_1.png",
+        text:
+          "I’ve sent over your payment. Thanks for helping bring this exhibition to life."
+      }
+    ];
+
+    // ---------- shared dialogue runner ----------
     let current = 0;
     let activeScript = null;
     let onDone = null;
@@ -1314,7 +1387,7 @@ const PAUL_COMPLETE_DIALOGUE = [
       activeScript = script;
       current = 0;
       onDone = doneCb || null;
-      nameEl.textContent = speakerName || "Griffin Flowers";
+      nameEl.textContent = speakerName || "Client";
       layer.classList.remove("hidden");
       showLine();
     }
@@ -1325,6 +1398,8 @@ const PAUL_COMPLETE_DIALOGUE = [
       showLine();
     });
 
+    // ---------- Exposed helpers ----------
+
     window.startFlowerHausDialogue = function () {
       startDialogue(FLOWER_HAUS_BRIEF_DIALOGUE, "Griffin Flowers", function () {
         if (typeof window.setMagazineMode === "function") {
@@ -1334,23 +1409,6 @@ const PAUL_COMPLETE_DIALOGUE = [
         window.flowerHausJobComplete = false;
       });
     };
-    window.startPaulDialogue = function () {
-  startDialogue(PAUL_ACCEPT_DIALOGUE, "Paul", function () {
-    window.paulJobActive = true;
-    window.paulJobComplete = false;
-    // NO magazine mode here
-  });
-};
-
-window.startPaulCompleteDialogue = function () {
-  startDialogue(PAUL_COMPLETE_DIALOGUE, "Paul", function () {
-    window.paulJobComplete = true;
-    // Add payment
-    if (typeof window.cashAddIncome === "function") {
-      window.cashAddIncome(350, "Paul’s Computer Logo");
-    }
-  });
-};
 
     window.startFlowerHausCompleteDialogue = function () {
       startDialogue(FLOWER_HAUS_COMPLETE_DIALOGUE, "Griffin Flowers", function () {
@@ -1360,8 +1418,41 @@ window.startPaulCompleteDialogue = function () {
         }
       });
     };
+
+    window.startPaulDialogue = function () {
+      startDialogue(PAUL_ACCEPT_DIALOGUE, "Paul", function () {
+        window.paulJobActive = true;
+        window.paulJobComplete = false;
+      });
+    };
+
+    window.startPaulCompleteDialogue = function () {
+      startDialogue(PAUL_COMPLETE_DIALOGUE, "Paul", function () {
+        window.paulJobComplete = true;
+        if (typeof window.cashAddIncome === "function") {
+          window.cashAddIncome(350, "Paul’s Computer Logo");
+        }
+      });
+    };
+
+    window.startAprilDialogue = function () {
+      startDialogue(APRIL_ACCEPT_DIALOGUE, "April", function () {
+        window.aprilJobActive = true;
+        window.aprilJobComplete = false;
+      });
+    };
+
+    window.startAprilCompleteDialogue = function () {
+      startDialogue(APRIL_COMPLETE_DIALOGUE, "April", function () {
+        window.aprilJobComplete = true;
+        if (typeof window.cashAddIncome === "function") {
+          window.cashAddIncome(400, "April Art Show Poster");
+        }
+      });
+    };
   })();
-  </script>
+</script>
+
 
   <!-- Asset browser wiring: asset_1–asset_20 -->
   <script>
