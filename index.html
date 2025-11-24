@@ -417,7 +417,7 @@
       <div class="dialogue-face-wrap">
         <img
           id="dialogue-face"
-          src="./assets/ui/IMG_0211.jpg"
+          src="./assets/ui/IMG_0256.png"
           alt="Griffin portrait"
           class="dialogue-face"
         />
@@ -1122,6 +1122,14 @@
             handled = true;
           }
         }
+        if (!handled && window.paulJobActive && !window.paulJobComplete) {
+  const ok = confirm("Submit this design for Paul?");
+  if (ok && typeof window.startPaulCompleteDialogue === "function") {
+    window.startPaulCompleteDialogue();
+    handled = true;
+  }
+}
+
   
         // Nothing active
         if (!handled) {
@@ -1219,17 +1227,17 @@
 
     const FLOWER_HAUS_BRIEF_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0211.jpg",
+        face: "./assets/ui/IMG_0255.png",
         text:
           "Hey! Thanks for accepting my brief. I know its short notice but this magazine is my love letter to Graphic Design and I need it to be perfect."
       },
       {
-        face: "./assets/ui/IMG_0212.jpg",
+        face: "./assets/ui/IMG_0253.png",
         text:
           "I want the cover to have a calm soothing color scheme, maybe analogous colors? Think strong hierarchy too: Flower Haus needs to read first, then the issue title, then any smaller copy."
       },
       {
-        face: "./assets/ui/IMG_0213.jpg",
+        face: "./assets/ui/IMG_0256.png",
         text:
           "Visually, I want everything to feel unified. type, illustration, background all related in some way. You can get experimental with everything else, as long as the important information stays clear. Let’s make this cover iconic."
       }
@@ -1237,21 +1245,51 @@
 
     const FLOWER_HAUS_COMPLETE_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0212.jpg",
+        face: "./assets/ui/IMG_0253.png",
         text:
           "Whoa, that cover looks incredible. It really feels like Flower Haus has its own voice now."
       },
       {
-        face: "./assets/ui/IMG_0213.jpg",
+        face: "./assets/ui/IMG_0256.png",
         text:
           "You nailed the hierarchy and the palette feels so cohesive. This is exactly what I was hoping for."
       },
       {
-        face: "./assets/ui/IMG_0211.jpg",
+        face: "./assets/ui/IMG_0255.png",
         text:
           "I’ve sent over your payment for the job! Consider this cover officially approved. Can’t wait to work with you again."
       }
     ];
+    const PAUL_ACCEPT_DIALOGUE = [
+  {
+    face: "./assets/ui/Paul_1.png",
+    text: "Ah, thank you for accepting my brief. I’ve been working on computers for decades, but branding… not so much."
+  },
+  {
+    face: "./assets/ui/Paul_2.png",
+    text: "I need a logo that feels modern but isn’t trend-chasing. Something with structure. Something honest. A logo should solve a problem, not decorate it."
+  },
+  {
+    face: "./assets/ui/Paul_3.png",
+    text: "Give me something simple, bold, and unmistakable — the kind of mark that could sit proudly on a motherboard or a magazine cover."
+  }
+];
+
+const PAUL_COMPLETE_DIALOGUE = [
+  {
+    face: "./assets/ui/Paul_2.png",
+    text: "Well now… this is exactly the kind of clarity I wanted."
+  },
+  {
+    face: "./assets/ui/Paul_3.png",
+    text: "Strong form, precise balance — it’s a logo with real intelligence. You’ve done fine work."
+  },
+  {
+    face: "./assets/ui/Paul_1.png",
+    text: "Payment has been sent. Let’s continue to make smart design together."
+  }
+];
+
 
     let current = 0;
     let activeScript = null;
@@ -1296,6 +1334,23 @@
         window.flowerHausJobComplete = false;
       });
     };
+    window.startPaulDialogue = function () {
+  startDialogue(PAUL_ACCEPT_DIALOGUE, "Paul", function () {
+    window.paulJobActive = true;
+    window.paulJobComplete = false;
+    // NO magazine mode here
+  });
+};
+
+window.startPaulCompleteDialogue = function () {
+  startDialogue(PAUL_COMPLETE_DIALOGUE, "Paul", function () {
+    window.paulJobComplete = true;
+    // Add payment
+    if (typeof window.cashAddIncome === "function") {
+      window.cashAddIncome(350, "Paul’s Computer Logo");
+    }
+  });
+};
 
     window.startFlowerHausCompleteDialogue = function () {
       startDialogue(FLOWER_HAUS_COMPLETE_DIALOGUE, "Griffin Flowers", function () {

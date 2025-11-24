@@ -1,5 +1,4 @@
 // email.js – brief-style inbox matching the mockup
-
 (function () {
   const listEl    = document.getElementById("m-list");
   const subjEl    = document.getElementById("m-subj");
@@ -9,7 +8,7 @@
 
   if (!listEl || !bodyEl || !appEl) return;
 
-  // ----- DATA: Flower Haus brief -----
+  // ----- DATA: briefs in the inbox -----
   const EMAILS = [
     {
       id: "flower-haus-issue-1",
@@ -22,16 +21,29 @@
         "",
         "Hey, I’m Griffin nice to meet you. I’m finally ready to release the first issue of my magazine,",
         "Flower Haus, and I need a cover that really sets the tone.",
-        "Its basically sports illustrated for Graphic Designers",
+        "Its basically sports illustrated for Graphic Designers.",
         "I want the layout to have a clear visual hierarchy",
         "so the title, issue info, and main headline stand out.",
         "",
         "Use an Analogous color palette that feels cohesive and intentional,",
         "not random. Everything on the cover should feel like it belongs",
-        "together strong Unity between type, imagery, and background.",
-        "You can get experimental with everything else just make sure it",
-        "Stays on theme."
+        "together – strong Unity between type, imagery, and background.",
+        "You can get experimental with everything else, just make sure it",
+        "stays on theme."
       ].join("\n")
+    },
+    {
+      id: "paul-logo-brief",
+      subject: "New Brief: Paul’s Computer Co. Logo",
+      body:
+`Client: Paul’s Computer Company
+Project: New Logo
+Deadline: 2 days
+Deliverable: 1 Logo
+
+We’re Paul’s Computer Company, a small but sharp tech outfit focused on creating machines that blend reliability with thoughtful design.
+
+We want something iconic, geometric, and unmistakable — a mark that looks strong whether printed on a circuit board or glowing on a startup screen.`
     }
   ];
 
@@ -50,7 +62,6 @@
       btn.textContent = email.subject;
 
       btn.addEventListener("click", () => selectEmail(email.id));
-
       listEl.appendChild(btn);
     });
 
@@ -100,23 +111,36 @@
     declineBtn.textContent = "Decline";
 
     acceptBtn.addEventListener("click", () => {
+      const email = EMAILS.find(e => e.id === currentId);
+      if (!email) return;
+
       statusById[currentId] = "accepted";
       if (window.onBriefAccepted) window.onBriefAccepted(currentId);
-      acceptBtn.textContent = "Accepted!";
-      // Don't allow accepting the Flower Haus brief if a commission is already active
-if (window.activeCommissionId) {
-  alert('You already have an active commission. Finish and upload that job before accepting a new brief.');
-  return;
-}
 
+      // Block if a commission is already active
+      if (window.activeCommissionId) {
+        alert("You already have an active commission. Finish that job before accepting a new brief.");
+        return;
+      }
 
-      // Trigger Griffin dialogue when Flower Haus brief is accepted
+      // Flower Haus logic
       if (
-        currentId === "flower-haus-issue-1" &&
+        email.id === "flower-haus-issue-1" &&
         typeof window.startFlowerHausDialogue === "function"
       ) {
         window.startFlowerHausDialogue();
       }
+
+      // Paul brief logic
+      if (email.id === "paul-logo-brief") {
+        window.paulJobActive = true;
+        window.paulJobComplete = false;
+        if (typeof window.startPaulDialogue === "function") {
+          window.startPaulDialogue();
+        }
+      }
+
+      acceptBtn.textContent = "Accepted!";
     });
 
     declineBtn.addEventListener("click", () => {
@@ -129,7 +153,7 @@ if (window.activeCommissionId) {
     actionsEl.appendChild(declineBtn);
   }
 
-  // ----- INITIAL STATE: no text until click -----
+  // ----- INITIAL STATE -----
   function init() {
     renderList();
     currentId = null;
