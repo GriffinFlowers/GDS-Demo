@@ -189,80 +189,118 @@
       </div>
 
       <!-- Web window -->
-      <div class="win hidden" id="win-web">
-        <div class="titlebar">
-          <div class="btn btn-close" data-close></div>
-          <div class="btn btn-min" data-min></div>
-          <div class="btn btn-max" data-max></div>
-          <div class="title">Web</div>
+<div class="win hidden" id="win-web">
+  <div class="titlebar">
+    <div class="btn btn-close" data-close></div>
+    <div class="btn btn-min" data-min></div>
+    <div class="btn btn-max" data-max></div>
+    <div class="title">Web</div>
+  </div>
+
+  <div class="content web-shell">
+    <!-- Fake browser tab bar -->
+    <div class="web-tabbar">
+      <button id="web-back" class="web-back hidden">◀ Back</button>
+      <div class="web-tab active" id="web-tab-title">New tab</div>
+    </div>
+
+    <!-- “Browser” viewport -->
+    <div class="web-view">
+      <!-- HOME PAGE -->
+      <section id="web-home" class="web-page">
+        <div class="web-logo-row">
+          <div class="web-logo-circle">🌐</div>
         </div>
 
-        <div class="content web-shell">
-          <!-- Fake browser tab bar -->
-          <div class="web-tabbar">
-            <button id="web-back" class="web-back hidden">◀ Back</button>
-            <div class="web-tab active" id="web-tab-title">New tab</div>
-          </div>
-
-          <!-- “Browser” viewport -->
-          <div class="web-view">
-            <!-- HOME PAGE -->
-            <section id="web-home" class="web-page">
-              <div class="web-logo-row">
-                <div class="web-logo-circle">🌐</div>
-              </div>
-
-              <div class="web-search-row">
-                <div class="web-search-box">
-                  <input
-                    id="web-search-input"
-                    type="text"
-                    placeholder="Search"
-                    autocomplete="off"
-                  />
-                  <button id="web-search-btn" class="web-search-icon">🔍</button>
-                </div>
-              </div>
-
-              <div class="web-suggest-title">Suggested Search</div>
-
-              <div class="web-suggest-row">
-                <button class="web-suggest" data-web-search="client">
-                  client research
-                </button>
-                <button class="web-suggest" data-web-search="principles">
-                  principles of design
-                </button>
-                <button class="web-suggest" data-web-search="color">
-                  color theory
-                </button>
-              </div>
-            </section>
-
-            <!-- PRINCIPLES PAGE -->
-            <section id="web-principles" class="web-page hidden">
-              <div class="web-img-wrap">
-                <img
-                  src="./assets/ui/principles_of_design.png"
-                  alt="Principles of design"
-                  class="web-img-full"
-                />
-              </div>
-            </section>
-
-            <!-- COLOR THEORY PAGE -->
-            <section id="web-color" class="web-page hidden">
-              <div class="web-img-wrap">
-                <img
-                  src="./assets/ui/color_theory_page.png"
-                  alt="Color Theory"
-                  class="web-img-full"
-                />
-              </div>
-            </section>
+        <div class="web-search-row">
+          <div class="web-search-box">
+            <input
+              id="web-search-input"
+              type="text"
+              placeholder="Search"
+              autocomplete="off"
+            />
+            <button id="web-search-btn" class="web-search-icon">🔍</button>
           </div>
         </div>
-      </div>
+
+        <div class="web-suggest-title">Suggested Search</div>
+
+        <div class="web-suggest-row">
+          <button class="web-suggest" data-web-search="client">
+            client research
+          </button>
+          <button class="web-suggest" data-web-search="principles">
+            principles of design
+          </button>
+          <button class="web-suggest" data-web-search="color">
+            color theory
+          </button>
+        </div>
+      </section>
+
+      <!-- PRINCIPLES PAGE -->
+      <section id="web-principles" class="web-page hidden">
+        <div class="web-img-wrap">
+          <img
+            src="./assets/ui/principles_of_design.png"
+            alt="Principles of design"
+            class="web-img-full"
+          />
+        </div>
+      </section>
+
+      <!-- COLOR THEORY PAGE -->
+      <section id="web-color" class="web-page hidden">
+        <div class="web-img-wrap">
+          <img
+            src="./assets/ui/color_theory_page.png"
+            alt="Color Theory"
+            class="web-img-full"
+          />
+        </div>
+      </section>
+      <!-- CLIENTPEDIA PAGE -->
+      <section id="web-client" class="web-page hidden">
+        <div class="web-client-inner">
+          <div class="web-img-wrap">
+            <img
+              id="client-img"
+              src="./assets/ui/April_Greiman_Bio.png"
+              alt="Clientpedia – April Greiman"
+              class="web-img-full"
+            />
+          </div>
+
+          <!-- bottom-right pager button -->
+          <button id="client-next" class="client-next-btn">
+            Next client ▶
+          </button>
+        </div>
+      </section>
+
+
+      <!-- CLIENT RESEARCH PAGE -->
+      <section id="web-client" class="web-page hidden">
+        <div class="web-img-wrap">
+          <img
+            id="web-client-img"
+            src="./assets/ui/April_Greiman_Bio.png"
+            alt="Clientpedia page for April Greiman"
+            class="web-img-full"
+          />
+        </div>
+
+        <div class="web-client-controls">
+          <button id="web-client-prev" type="button">◀ Previous</button>
+          <span id="web-client-label">April Greiman</span>
+          <button id="web-client-next" type="button">Next ▶</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
 
       <!-- Briefs -->
       <div class="win hidden" id="win-briefs">
@@ -1157,7 +1195,14 @@
           handled = true;
         }
       }
-
+      // 3) Tanaka Brief
+if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
+  const ok = confirm("Submit your poster design to Ikko Tanaka?");
+  if (ok && typeof window.startTanakaCompleteDialogue === "function") {
+    window.startTanakaCompleteDialogue();
+    handled = true;
+  }
+}
       // Nothing active
       if (!handled) {
         alert('There is no active client brief or commission to submit yet.');
@@ -1170,79 +1215,121 @@
 
 
 
-  <!-- Web app logic (with color theory + back button) -->
-  <script>
-  (function(){
-    const homePage       = document.getElementById('web-home');
-    const principlesPage = document.getElementById('web-principles');
-    const colorPage      = document.getElementById('web-color');
-    const tabTitle       = document.getElementById('web-tab-title');
-    const searchInput    = document.getElementById('web-search-input');
-    const searchBtn      = document.getElementById('web-search-btn');
-    const backBtn        = document.getElementById('web-back');
-
-    if (!homePage || !principlesPage || !colorPage) return;
-
-    function showPage(name){
-      homePage.classList.add('hidden');
-      principlesPage.classList.add('hidden');
-      colorPage.classList.add('hidden');
-
-      if (name === 'principles') {
-        principlesPage.classList.remove('hidden');
-        tabTitle.textContent = 'Principles of design';
-        backBtn.classList.remove('hidden');
-      } else if (name === 'color') {
-        colorPage.classList.remove('hidden');
-        tabTitle.textContent = 'Color Theory';
-        backBtn.classList.remove('hidden');
-      } else {
-        homePage.classList.remove('hidden');
-        tabTitle.textContent = 'New tab';
-        backBtn.classList.add('hidden');
-      }
-    }
-
-    showPage('home');
-
-    document.querySelectorAll('.web-suggest').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const target = btn.getAttribute('data-web-search');
-        if (target === 'principles') {
-          showPage('principles');
-        } else if (target === 'color') {
-          showPage('color');
-        } else {
-          alert('That search result is coming soon – for now, "principles of design" and "color theory" are implemented.');
+   <!-- Web app logic (with color theory + back button + client pages) -->
+   <script>
+    (function(){
+      const homePage       = document.getElementById('web-home');
+      const principlesPage = document.getElementById('web-principles');
+      const colorPage      = document.getElementById('web-color');
+      const clientPage     = document.getElementById('web-client');
+      const clientImg      = document.getElementById('client-img');
+      const clientNextBtn  = document.getElementById('client-next');
+  
+      const tabTitle       = document.getElementById('web-tab-title');
+      const searchInput    = document.getElementById('web-search-input');
+      const searchBtn      = document.getElementById('web-search-btn');
+      const backBtn        = document.getElementById('web-back');
+  
+      if (!homePage || !principlesPage || !colorPage || !clientPage) return;
+  
+      // ----- CLIENTPEDIA PNGs -----
+      const CLIENT_PAGES = [
+        "./assets/ui/April_Greiman_Bio.png",
+        "./assets/ui/Paul_Rand_Bio.png",
+        "./assets/ui/Ikko_Tanaka_Bio.png"
+      ];
+      let clientIndex = 0;
+  
+      function setClientImage(idx){
+        clientIndex = (idx + CLIENT_PAGES.length) % CLIENT_PAGES.length;
+        if (clientImg) {
+          clientImg.src = CLIENT_PAGES[clientIndex];
         }
-      });
-    });
-
-    function runSearch(){
-      const q = (searchInput.value || '').toLowerCase();
-      if (!q) return;
-      if (q.includes('principle')) {
-        showPage('principles');
-      } else if (q.includes('color')) {
-        showPage('color');
-      } else {
-        alert('In this prototype, the Web app has pages for "principles of design" and "color theory".');
       }
-    }
+  
+      // ----- PAGE SWITCHER -----
+      function showPage(name){
+        homePage.classList.add('hidden');
+        principlesPage.classList.add('hidden');
+        colorPage.classList.add('hidden');
+        clientPage.classList.add('hidden');
+  
+        if (name === 'principles') {
+          principlesPage.classList.remove('hidden');
+          tabTitle.textContent = 'Principles of design';
+          backBtn.classList.remove('hidden');
+        } else if (name === 'color') {
+          colorPage.classList.remove('hidden');
+          tabTitle.textContent = 'Color Theory';
+          backBtn.classList.remove('hidden');
+        } else if (name === 'client') {
+          clientPage.classList.remove('hidden');
+          tabTitle.textContent = 'Client research';
+          backBtn.classList.remove('hidden');
+        } else {
+          homePage.classList.remove('hidden');
+          tabTitle.textContent = 'New tab';
+          backBtn.classList.add('hidden');
+        }
+      }
+  
+      showPage('home');
+  
+      // ----- SUGGESTED SEARCH BUTTONS -----
+      document.querySelectorAll('.web-suggest').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const target = btn.getAttribute('data-web-search');
+          if (target === 'principles') {
+            showPage('principles');
+          } else if (target === 'color') {
+            showPage('color');
+          } else if (target === 'client') {
+            setClientImage(0);     // start on April
+            showPage('client');
+          } else {
+            alert('That search result is coming soon – for now, "client research", "principles of design", and "color theory" are implemented.');
+          }
+        });
+      });
+  
+      // ----- SIMPLE SEARCH (optional / limited) -----
+      function runSearch(){
+        const q = (searchInput.value || '').toLowerCase();
+        if (!q) return;
+        if (q.includes('principle')) {
+          showPage('principles');
+        } else if (q.includes('color')) {
+          showPage('color');
+        } else if (q.includes('client')) {
+          setClientImage(0);
+          showPage('client');
+        } else {
+          alert('In this prototype, the Web app has pages for "client research", "principles of design", and "color theory".');
+        }
+      }
+  
+      searchBtn?.addEventListener('click', runSearch);
+      searchInput?.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter') runSearch();
+      });
+  
+      backBtn?.addEventListener('click', ()=> showPage('home'));
+      tabTitle?.addEventListener('click', ()=> showPage('home'));
+  
+      window.webShowHome = () => showPage('home');
+  
+      // ----- NEXT CLIENT BUTTON -----
+      if (clientNextBtn) {
+        clientNextBtn.addEventListener('click', () => {
+          setClientImage(clientIndex + 1); // advance to next PNG
+        });
+      }
+    })();
+    </script>
+  
+  
 
-    searchBtn?.addEventListener('click', runSearch);
-    searchInput?.addEventListener('keydown', (e)=>{
-      if (e.key === 'Enter') runSearch();
-    });
-
-    backBtn?.addEventListener('click', ()=> showPage('home'));
-    tabTitle?.addEventListener('click', ()=> showPage('home'));
-
-    window.webShowHome = () => showPage('home');
-  })();
-  </script>
-
-  <!-- Flower Haus / Paul / April dialogue system -->
+  <!-- Flower Haus / Paul / April / Tanaka dialogue system -->
 <script>
   (function () {
     const layer   = document.getElementById("dialogue-layer");
@@ -1262,12 +1349,12 @@
       {
         face: "./assets/ui/IMG_0212.jpg",
         text:
-          "I want the cover to have a calm soothing color scheme, maybe analogous colors? Think strong hierarchy too: Flower Haus needs to read first, then the issue title, then any smaller copy."
+          "I know this is your first job so I'm going to keep things real simple, by giving you complete creative freedom. Don't get used to this though, most clients will be a lot more picky!"
       },
       {
         face: "./assets/ui/IMG_0213.jpg",
         text:
-          "Visually, I want everything to feel unified. Type, illustration, background all related in some way. You can get experimental with everything else, as long as the important information stays clear. Let’s make this cover iconic."
+          "You can experiment with every color scheme and design principle and tool available. Before you submit make sure you spend some time brushing up on the basics in the Web search app. Let’s make this cover iconic."
       }
     ];
 
@@ -1299,7 +1386,7 @@
       {
         face: "./assets/ui/Paul_2.png",
         text:
-          "Think in terms of geometry and structure: circles, squares, lines. No decoration for decoration’s sake."
+          "Think in terms of geometry and structure; circles, squares, lines, nothing done freehand. No superfluous decorations."
       },
       {
         face: "./assets/ui/Paul_3.png",
@@ -1312,12 +1399,12 @@
       {
         face: "./assets/ui/Paul_2.png",
         text:
-          "That’s exactly the kind of clarity I was hoping for. It feels inevitable, like it’s always existed."
+          "That’s exactly the kind of form I was hoping for…..It feels inevitable, like it’s always existed."
       },
       {
         face: "./assets/ui/Paul_3.png",
         text:
-          "It sits so well in both positive and negative space. Really strong work."
+          "Good use of typeface and negative space. Really strong work. You must've done your research."
       },
       {
         face: "./assets/ui/Paul_1.png",
@@ -1363,6 +1450,43 @@
       }
     ];
 
+    // ---------- TANAKA (film poster) ----------
+    const TANAKA_ACCEPT_DIALOGUE = [
+      {
+        face: "./assets/ui/IMG_0247.jpg",
+        text:
+          "Thank you for accepting my brief. This film is deeply personal, and the poster must reflect clarity and strong form."
+      },
+      {
+        face: "./assets/ui/IMG_0249.jpg",
+        text:
+          "Focus on balance, geometry, and a calm sense of control. A poster that is readable, structured, and harmonious."
+      },
+      {
+        face: "./assets/ui/IMG_0248.jpg",
+        text:
+          "Let the shapes do the speaking. I am excited to see what you create."
+      }
+    ];
+
+    const TANAKA_COMPLETE_DIALOGUE = [
+      {
+        face: "./assets/ui/IMG_0247.jpg",
+        text:
+          "This poster speaks with clarity and confidence. Your composition is excellent."
+      },
+      {
+        face: "./assets/ui/IMG_0248.jpg",
+        text:
+          "You captured the spirit of the film without excess detail. Beautifully done."
+      },
+      {
+        face: "./assets/ui/IMG_0247.jpg",
+        text:
+          "Payment has been sent. I hope we can work together again soon."
+      }
+    ];
+
     // ---------- shared dialogue runner ----------
     let current = 0;
     let activeScript = null;
@@ -1399,7 +1523,6 @@
     });
 
     // ---------- Exposed helpers ----------
-
     window.startFlowerHausDialogue = function () {
       startDialogue(FLOWER_HAUS_BRIEF_DIALOGUE, "Griffin Flowers", function () {
         if (typeof window.setMagazineMode === "function") {
@@ -1411,12 +1534,16 @@
     };
 
     window.startFlowerHausCompleteDialogue = function () {
-      startDialogue(FLOWER_HAUS_COMPLETE_DIALOGUE, "Griffin Flowers", function () {
-        window.flowerHausJobComplete = true;
-        if (typeof window.cashAddIncome === "function") {
-          window.cashAddIncome(500, "Flower Haus Cover");
+      startDialogue(
+        FLOWER_HAUS_COMPLETE_DIALOGUE,
+        "Griffin Flowers",
+        function () {
+          window.flowerHausJobComplete = true;
+          if (typeof window.cashAddIncome === "function") {
+            window.cashAddIncome(500, "Flower Haus Cover");
+          }
         }
-      });
+      );
     };
 
     window.startPaulDialogue = function () {
@@ -1450,8 +1577,25 @@
         }
       });
     };
+
+    window.startTanakaDialogue = function () {
+      startDialogue(TANAKA_ACCEPT_DIALOGUE, "Ikko Tanaka", function () {
+        window.tanakaJobActive = true;
+        window.tanakaJobComplete = false;
+      });
+    };
+
+    window.startTanakaCompleteDialogue = function () {
+      startDialogue(TANAKA_COMPLETE_DIALOGUE, "Ikko Tanaka", function () {
+        window.tanakaJobComplete = true;
+        if (typeof window.cashAddIncome === "function") {
+          window.cashAddIncome(450, "Ikko Tanaka – Film Poster");
+        }
+      });
+    };
   })();
 </script>
+
 
 
   <!-- Asset browser wiring: asset_1–asset_20 -->

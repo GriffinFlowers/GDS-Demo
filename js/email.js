@@ -56,7 +56,22 @@ Deliverable: 1 Poster (digital + print)
 I’m hosting a small exhibition of new-media work and I want the poster to feel as experimental as the show itself.
 
 Think bold color, layered typography, and strong use of grid and diagonals — almost like the type and shapes are in motion. It should still clearly communicate the show title, date, time, and location, but everything else can push into expressive, digital, New Wave territory.`
+    }, 
+    {
+      id: "tanaka-film-poster",
+      subject: "New Brief: Film Poster for Ikko Tanaka",
+      body: `Client: Ikko Tanaka
+    Project: Art Film Poster Design
+    Deadline: 3 days
+    Deliverable: 1 Poster
+    
+    I’m preparing the release of my latest visual film and need a poster that communicates clarity, balance, and a strong sense of form.
+    
+    The design should rely on bold geometric shapes, confident negative space, and a harmonious color relationship. The poster should feel modern, iconic, and readable at a glance — more about structure and rhythm than detailed imagery.
+    
+    Aim for a disciplined but impactful composition.`
     }
+    
   ];
 
   const statusById = {};
@@ -159,6 +174,15 @@ Think bold color, layered typography, and strong use of grid and diagonals — a
           window.startAprilDialogue();
         }
       }
+      //  TANAKA BRIEF
+if (email.id === "tanaka-film-poster") {
+  window.tanakaJobActive = true;
+  window.tanakaJobComplete = false;
+  if (typeof window.startTanakaDialogue === "function") {
+    window.startTanakaDialogue();
+  }
+}
+
 
       acceptBtn.textContent = "Accepted!";
     });
