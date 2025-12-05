@@ -114,27 +114,86 @@
           <div class="design-shell">
             <!-- LEFT TOOL BAR -->
             <aside class="tool-panel">
-              <button id="pen"    class="tool-btn active">Pen</button>
-              <button id="bucket" class="tool-btn">Paint Bucket</button>
-
-              <button id="type"   class="tool-btn">Text</button>
-              <button id="eraser" class="tool-btn">Erase</button>
-
-              <button id="shape"  class="tool-btn">Shape</button>
-              <button id="open-assets" class="tool-btn">Asset</button>
-
-              <button id="line"   class="tool-btn">Line</button>
-              <button id="move"   class="tool-btn">Move</button>
-
-              <button id="undo"   class="tool-btn">Undo</button>
-              <button id="picker" class="tool-btn">Eye dropper</button>
-
-              <button id="clear"  class="tool-btn">Trash</button>
-              <button id="upload" class="tool-btn">Upload</button>
-
-              <!-- keep save button for Ctrl+S export but hide it -->
+              <button id="pen" class="tool-btn active">
+                <img src="./assets/ui/pen_tool.png" alt="Pen tool" class="tool-icon">
+              </button>
+            
+              <button id="bucket" class="tool-btn">
+                <img src="./assets/ui/paint_bucket_tool.png" alt="Paint Bucket tool" class="tool-icon">
+              </button>
+            
+              <button id="type" class="tool-btn">
+                <img src="./assets/ui/type_tool.png" alt="Text tool" class="tool-icon">
+              </button>
+            
+              <button id="eraser" class="tool-btn">
+                <img src="./assets/ui/eraser_tool.png" alt="Erase tool" class="tool-icon">
+              </button>
+            
+              <button id="shape" class="tool-btn">
+                <img src="./assets/ui/shape_tool.png" alt="Shape tool" class="tool-icon">
+              </button>
+            
+              <button id="open-assets" class="tool-btn">
+                <img src="./assets/ui/asset_tool.png" alt="Asset tool" class="tool-icon">
+              </button>
+            
+              <button id="line" class="tool-btn">
+                <img src="./assets/ui/line_tool.png" alt="Line tool" class="tool-icon">
+              </button>
+            
+              <button id="move" class="tool-btn">
+                <img src="./assets/ui/move_tool.png" alt="Move tool" class="tool-icon">
+              </button>
+            
+              <button id="undo" class="tool-btn">
+                <img src="./assets/ui/undo_tool.png" alt="Undo tool" class="tool-icon">
+              </button>
+            
+              <button id="picker" class="tool-btn">
+                <img src="./assets/ui/eyedropper_tool.png" alt="Eye dropper tool" class="tool-icon">
+              </button>
+            
+              <button id="clear" class="tool-btn">
+                <img src="./assets/ui/trash_tool.png" alt="Trash tool" class="tool-icon">
+              </button>
+            
+              <button id="upload" class="tool-btn">
+                <img src="./assets/ui/upload_tool.png" alt="Upload tool" class="tool-icon">
+              </button>
+            
+              <!-- keep hidden for save shortcut -->
               <button id="savepng" style="display:none;">Save PNG</button>
             </aside>
+            
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                const icons = document.querySelectorAll(".dock .icon");
+              
+                icons.forEach(icon => {
+                  icon.addEventListener("click", () => {
+                    icon.classList.remove("icon-click-anim"); // reset animation
+                    void icon.offsetWidth;                   // force reflow
+                    icon.classList.add("icon-click-anim");   // trigger animation
+                  });
+                });
+              });
+              </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // DESIGN TOOL BUTTONS
+    const toolButtons = document.querySelectorAll(".tool-btn");
+  
+    toolButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.classList.remove("icon-click-anim"); // reset animation
+        void btn.offsetWidth;                    // force reflow
+        btn.classList.add("icon-click-anim");    // trigger animation
+      });
+    });
+  });
+  </script>
+                
 
             <!-- CENTER: SIZE SLIDER + CANVAS -->
             <main class="design-center">
@@ -278,19 +337,6 @@
           </button>
         </div>
       </section>
-
-
-      <!-- CLIENT RESEARCH PAGE -->
-      <section id="web-client" class="web-page hidden">
-        <div class="web-img-wrap">
-          <img
-            id="web-client-img"
-            src="./assets/ui/April_Greiman_Bio.png"
-            alt="Clientpedia page for April Greiman"
-            class="web-img-full"
-          />
-        </div>
-
         <div class="web-client-controls">
           <button id="web-client-prev" type="button">◀ Previous</button>
           <span id="web-client-label">April Greiman</span>
@@ -722,16 +768,24 @@
         return;
       }
       if (e.key==='Enter'){
-        const item = {
-          x: hot.typing.x, y: hot.typing.y, text: hot.typing.text,
-          font: FONTS[fontIndex], size: Number(sizeInput?.value || 16),
-          color: colorInput?.value || '#ffffff',
-          selected:false, w:0, h:0
-        };
-        hot.textItems.push(item);
-        hot.typing = null;
-        return;
-      }
+  const item = {
+    x: hot.typing.x, y: hot.typing.y, text: hot.typing.text,
+    font: FONTS[fontIndex], size: Number(sizeInput?.value || 16),
+    color: colorInput?.value || '#ffffff',
+    selected:false, w:0, h:0
+  };
+  hot.textItems.push(item);
+
+  // --- track fonts we used this attempt ---
+  if (!hot.usedFontsArr) hot.usedFontsArr = [];
+  if (!hot.usedFontsArr.includes(item.font)) {
+    hot.usedFontsArr.push(item.font);
+  }
+
+  hot.typing = null;
+  return;
+}
+
       if (e.key==='Escape'){
         hot.typing = null;
         return;
@@ -968,11 +1022,14 @@
     // magazine mode: tall page
     canvas.style.width  = '500px';
     canvas.style.height = '800px';
+    canvas.style.aspectRatio = '500 / 800';
   } else {
-    // normal mode: fill the whole canvas frame
+    // normal mode: keep 16:9 aspect ratio and scale by width
     canvas.style.width  = '100%';
-    canvas.style.height = '100%';
+    canvas.style.height = 'auto';          // ✅ was "100%" (caused stretch)
+    canvas.style.aspectRatio = '16 / 9';   // keep circles circular
   }
+
 
   // Resize offscreen paint canvas
   let paint = hot.paint;
@@ -991,25 +1048,33 @@
 };
 
 
-    function setTool(name){
-      hot.tool = name;
-      const ids = ['pen','bucket','type','eraser','shape','open-assets','line','move','undo','picker','clear','upload'];
-      ids.forEach(id=>{
-        const btn = document.getElementById(id);
-        if (!btn) return;
-        const toolName =
-          id === 'pen'   ? 'pen'   :
-          id === 'bucket'? 'bucket':
-          id === 'type'  ? 'type'  :
-          id === 'eraser'? 'eraser':
-          id === 'picker'? 'picker':
-          id === 'move'  ? 'move'  :
-          id === 'line'  ? 'line'  :
-          id === 'shape' ? 'shape' :
-          null;
-        btn.classList.toggle('active', toolName === name);
-      });
-    }
+function setTool(name){
+  hot.tool = name;
+
+  // --- track which tools were used this attempt ---
+  if (!hot.usedToolsArr) hot.usedToolsArr = [];
+  if (name && !hot.usedToolsArr.includes(name)) {
+    hot.usedToolsArr.push(name);
+  }
+
+  const ids = ['pen','bucket','type','eraser','shape','open-assets','line','move','undo','picker','clear','upload'];
+  ids.forEach(id=>{
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const toolName =
+      id === 'pen'   ? 'pen'   :
+      id === 'bucket'? 'bucket':
+      id === 'type'  ? 'type'  :
+      id === 'eraser'? 'eraser':
+      id === 'picker'? 'picker':
+      id === 'move'  ? 'move'  :
+      id === 'line'  ? 'line'  :
+      id === 'shape' ? 'shape' :
+      null;
+    btn.classList.toggle('active', toolName === name);
+  });
+}
+
 
     document.getElementById('pen')   ?.addEventListener('click', ()=> setTool('pen'));
     document.getElementById('eraser')?.addEventListener('click', ()=> setTool('eraser'));
@@ -1088,38 +1153,49 @@
   })();
   </script>
 
-  <!-- Design UI wiring for new layout (Upload + swatches/clear/undo) -->
-   <!-- Design UI wiring for new layout (Upload = submit design only) -->
+<!-- Design UI wiring for new layout (Upload + swatches/clear/undo) -->
 <script>
   (function () {
     const hot        = (window.__designHot ||= {});
     const colorInput = document.getElementById('color');
-  
+
     // Color swatches -> visible colors + hidden color input
-    document.querySelectorAll('.swatch').forEach((btn) => {
+    const swatches = document.querySelectorAll('.swatch');
+    swatches.forEach((btn, idx) => {
       const c = btn.dataset.color || '#000000';
-      // show the color in the UI
       btn.style.backgroundColor = c;
-  
+
       btn.addEventListener('click', () => {
         if (colorInput) colorInput.value = c;
+
+        // Track swatch index so we can judge relationships
+        if (!hot.usedColorIndicesArr) hot.usedColorIndicesArr = [];
+        hot.usedColorIndicesArr.push(idx); // 0–11
       });
     });
-  
-    // Clear: wipe canvas + remove stickers/text
+
+    // Clear: wipe canvas + remove stickers/text + metrics
     document.getElementById('clear')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h || !h.pctx || !h.paint) return;
+
       h.pctx.fillStyle = '#faf8e8';
       h.pctx.fillRect(0, 0, h.paint.width, h.paint.height);
+
       if (h.stickers)  h.stickers.length  = 0;
       if (h.textItems) h.textItems.length = 0;
+
+      // Reset metrics arrays
+      h.usedColorIndicesArr = [];
+      h.usedFontsArr        = [];
+      h.usedToolsArr        = [];
     });
-  
+
     // Undo: last text OR last sticker
     document.getElementById('undo')?.addEventListener('click', () => {
       const h = window.__designHot;
       if (!h) return;
+
       if (h.textItems && h.textItems.length) {
         h.textItems.pop();
         return;
@@ -1131,13 +1207,166 @@
       alert('Nothing to undo yet (paint strokes undo is a future upgrade).');
     });
   })();
-  </script>
+</script>
+
+
+<!-- Brief scoring helpers (no attempt tracking here) -->
+<script>
+  function getHot() {
+    return window.__designHot || {};
+  }
+
+  // FLOWER HAUS: must use at least 3 different tools
+  function evaluateFlowerDesign() {
+    const hot   = getHot();
+    const tools = hot.usedToolsArr || [];
+    const unique = new Set(tools);
+    return unique.size >= 3;
+  }
+
+  // PAUL: cannot use Pen; exactly 3 colors; colors roughly triadic
+  function evaluatePaulDesign() {
+    const hot   = getHot();
+    const tools = hot.usedToolsArr        || [];
+    const idxs  = hot.usedColorIndicesArr || [];
+
+    // 1) No Pen
+    if (tools.includes('pen')) return false;
+
+    // 2) Exactly 3 distinct colors
+    const unique = [...new Set(idxs)];
+    if (unique.length !== 3) return false;
+
+    // 3) Triadic-ish on a 12-step wheel (indices 0–11)
+    const pos = unique.map(i => i % 12).sort((a,b) => a - b);
+    const d1 = (pos[1] - pos[0] + 12) % 12;
+    const d2 = (pos[2] - pos[1] + 12) % 12;
+    const d3 = (pos[0] - pos[2] + 12) % 12;
+
+    const ok = d => d >= 3 && d <= 5; // loose-ish triad
+    return ok(d1) && ok(d2) && ok(d3);
+  }
+
+  // APRIL: analogous colors + at least 3 assets
+  function evaluateAprilDesign() {
+    const hot      = getHot();
+    const stickers = hot.stickers || [];
+    const idxs     = hot.usedColorIndicesArr || [];
+    const unique   = [...new Set(idxs)];
+
+    if (stickers.length < 3) return false;
+    if (unique.length < 2)   return false;
+
+    const min = Math.min(...unique);
+    const max = Math.max(...unique);
+    return (max - min) <= 3; // close together on the strip
+  }
+
+  // TANAKA: complementary-ish colors, ≤1 asset, must use sans serif
+  function evaluateTanakaDesign() {
+    const hot      = getHot();
+    const stickers = hot.stickers || [];
+    const idxs     = hot.usedColorIndicesArr || [];
+    const fonts    = hot.usedFontsArr        || [];
+
+    // ≤ 1 asset
+    if (stickers.length > 1) return false;
+
+    // Need at least 2 different colors
+    const unique = [...new Set(idxs)];
+    if (unique.length < 2) return false;
+
+    // warm vs cool grouping on our 12-swatch strip
+    const warmSet = new Set([0,1,2,7,8]);   // reds/oranges/yellows/browns
+    const coolSet = new Set([3,4,5,6]);     // greens/blues/purples
+
+    const hasWarm = unique.some(i => warmSet.has(i));
+    const hasCool = unique.some(i => coolSet.has(i));
+    if (!hasWarm || !hasCool) return false;
+
+    // Must use sans serif font
+    const sansSet = new Set(["Arial","Impact","Verdana","Trebuchet MS"]);
+    const usesSans = fonts.some(f => sansSet.has(f));
+    if (!usesSans) return false;
+
+    return true;
+  }
+</script>
+
+
+
   
-<!-- Upload = submit design to client/commission (no file upload) -->
+  
 <script>
   (function(){
     const uploadBtn = document.getElementById('upload');
     if (!uploadBtn) return;
+
+    // Track attempts per brief
+    if (!window.briefAttempts) {
+      window.briefAttempts = {
+        flower: 0,
+        paul:   0,
+        april:  0,
+        tanaka: 0
+      };
+    }
+
+    function resetBriefState(key) {
+      const hot = window.__designHot || {};
+      // Clear stats so next attempt starts fresh
+      if (window.resetDesignStats) window.resetDesignStats();
+
+      if (key === 'flower') {
+        window.flowerHausJobActive   = false;
+        window.flowerHausJobComplete = false;
+      }
+      if (key === 'paul') {
+        window.paulJobActive   = false;
+        window.paulJobComplete = false;
+      }
+      if (key === 'april') {
+        window.aprilJobActive   = false;
+        window.aprilJobComplete = false;
+      }
+      if (key === 'tanaka') {
+        window.tanakaJobActive   = false;
+        window.tanakaJobComplete = false;
+      }
+    }
+
+    function handleFail(key, clientName) {
+  const attempts = window.briefAttempts;
+  attempts[key] = (attempts[key] || 0) + 1;
+
+  const used      = attempts[key];
+  const remaining = Math.max(0, 3 - used);
+  const isFinal   = used >= 3;
+
+  // Trigger client-specific fail dialogue with hints
+  if (key === "flower" && typeof window.startFlowerHausFailDialogue === "function") {
+    window.startFlowerHausFailDialogue(remaining, isFinal);
+  } else if (key === "paul" && typeof window.startPaulFailDialogue === "function") {
+    window.startPaulFailDialogue(remaining, isFinal);
+  } else if (key === "april" && typeof window.startAprilFailDialogue === "function") {
+    window.startAprilFailDialogue(remaining, isFinal);
+  } else if (key === "tanaka" && typeof window.startTanakaFailDialogue === "function") {
+    window.startTanakaFailDialogue(remaining, isFinal);
+  } else {
+    // Fallback if something goes wrong
+    const msg = isFinal
+      ? clientName + " has rejected the project after 3 attempts. The brief has been reset."
+      : clientName + " isn’t satisfied yet. (" + used + "/3 attempts used)";
+    alert(msg);
+  }
+
+  // On 3rd failure, reset that brief for a fresh start
+  if (isFinal) {
+    attempts[key] = 0;
+    resetBriefState(key);
+  }
+}
+
 
     uploadBtn.addEventListener('click', () => {
       let handled = false;
@@ -1145,12 +1374,17 @@
       // 1) Flower Haus brief
       if (
         window.flowerHausJobActive &&
-        !window.flowerHausJobComplete &&
-        typeof window.startFlowerHausCompleteDialogue === 'function'
+        !window.flowerHausJobComplete
       ) {
-        const ok = confirm('Submit this design to the Flower Haus client?');
-        if (ok) {
-          window.startFlowerHausCompleteDialogue();
+        if (evaluateFlowerDesign()) {
+          const ok = confirm('Submit this design to the Flower Haus client?');
+          if (ok && typeof window.startFlowerHausCompleteDialogue === 'function') {
+            window.startFlowerHausCompleteDialogue();
+            window.briefAttempts.flower = 0;
+            handled = true;
+          }
+        } else {
+          handleFail('flower','Griffin');
           handled = true;
         }
       }
@@ -1159,12 +1393,17 @@
       if (
         !handled &&
         window.paulJobActive &&
-        !window.paulJobComplete &&
-        typeof window.startPaulCompleteDialogue === 'function'
+        !window.paulJobComplete
       ) {
-        const ok = confirm('Submit this design for Paul’s Computer Co. logo?');
-        if (ok) {
-          window.startPaulCompleteDialogue();
+        if (evaluatePaulDesign()) {
+          const ok = confirm("Submit this design for Paul’s Computer Co. logo?");
+          if (ok && typeof window.startPaulCompleteDialogue === 'function') {
+            window.startPaulCompleteDialogue();
+            window.briefAttempts.paul = 0;
+            handled = true;
+          }
+        } else {
+          handleFail('paul','Paul');
           handled = true;
         }
       }
@@ -1173,17 +1412,41 @@
       if (
         !handled &&
         window.aprilJobActive &&
-        !window.aprilJobComplete &&
-        typeof window.startAprilCompleteDialogue === 'function'
+        !window.aprilJobComplete
       ) {
-        const ok = confirm('Submit this design for April’s art show poster?');
-        if (ok) {
-          window.startAprilCompleteDialogue();
+        if (evaluateAprilDesign()) {
+          const ok = confirm("Submit this design for April’s art show poster?");
+          if (ok && typeof window.startAprilCompleteDialogue === 'function') {
+            window.startAprilCompleteDialogue();
+            window.briefAttempts.april = 0;
+            handled = true;
+          }
+        } else {
+          handleFail('april','April');
           handled = true;
         }
       }
 
-      // 4) Commission job
+      // 4) Tanaka film poster
+      if (
+        !handled &&
+        window.tanakaJobActive &&
+        !window.tanakaJobComplete
+      ) {
+        if (evaluateTanakaDesign()) {
+          const ok = confirm("Submit your poster design to Ikko Tanaka?");
+          if (ok && typeof window.startTanakaCompleteDialogue === 'function') {
+            window.startTanakaCompleteDialogue();
+            window.briefAttempts.tanaka = 0;
+            handled = true;
+          }
+        } else {
+          handleFail('tanaka','Ikko Tanaka');
+          handled = true;
+        }
+      }
+
+      // 5) Commissions (leave as-is, no scoring rules yet)
       if (
         !handled &&
         window.activeCommissionId &&
@@ -1195,25 +1458,13 @@
           handled = true;
         }
       }
-      // 3) Tanaka Brief
-if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
-  const ok = confirm("Submit your poster design to Ikko Tanaka?");
-  if (ok && typeof window.startTanakaCompleteDialogue === "function") {
-    window.startTanakaCompleteDialogue();
-    handled = true;
-  }
-}
-      // Nothing active
+
       if (!handled) {
         alert('There is no active client brief or commission to submit yet.');
       }
     });
   })();
 </script>
-
-  
-
-
 
    <!-- Web app logic (with color theory + back button + client pages) -->
    <script>
@@ -1326,10 +1577,18 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
       }
     })();
     </script>
-  
+    <script>
+  window.resetDesignStats = function () {
+    const hot = (window.__designHot ||= {});
+    hot.usedToolsArr        = [];
+    hot.usedColorIndicesArr = [];
+    hot.usedFontsArr        = [];
+  };
+</script>
+
   
 
-  <!-- Flower Haus / Paul / April / Tanaka dialogue system -->
+ <!-- Flower Haus / Paul / April / Tanaka dialogue system -->
 <script>
   (function () {
     const layer   = document.getElementById("dialogue-layer");
@@ -1488,9 +1747,9 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
     ];
 
     // ---------- shared dialogue runner ----------
-    let current = 0;
+    let current      = 0;
     let activeScript = null;
-    let onDone = null;
+    let onDone       = null;
 
     function showLine() {
       if (!activeScript || current >= activeScript.length) {
@@ -1509,8 +1768,8 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
 
     function startDialogue(script, speakerName, doneCb) {
       activeScript = script;
-      current = 0;
-      onDone = doneCb || null;
+      current      = 0;
+      onDone       = doneCb || null;
       nameEl.textContent = speakerName || "Client";
       layer.classList.remove("hidden");
       showLine();
@@ -1522,34 +1781,32 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
       showLine();
     });
 
-    // ---------- Exposed helpers ----------
+    // ---------- ACCEPT / COMPLETE HELPERS ----------
     window.startFlowerHausDialogue = function () {
       startDialogue(FLOWER_HAUS_BRIEF_DIALOGUE, "Griffin Flowers", function () {
         if (typeof window.setMagazineMode === "function") {
           window.setMagazineMode(true);
         }
-        window.flowerHausJobActive = true;
+        window.flowerHausJobActive   = true;
         window.flowerHausJobComplete = false;
+        window.resetDesignStats && window.resetDesignStats();
       });
     };
 
     window.startFlowerHausCompleteDialogue = function () {
-      startDialogue(
-        FLOWER_HAUS_COMPLETE_DIALOGUE,
-        "Griffin Flowers",
-        function () {
-          window.flowerHausJobComplete = true;
-          if (typeof window.cashAddIncome === "function") {
-            window.cashAddIncome(500, "Flower Haus Cover");
-          }
+      startDialogue(FLOWER_HAUS_COMPLETE_DIALOGUE, "Griffin Flowers", function () {
+        window.flowerHausJobComplete = true;
+        if (typeof window.cashAddIncome === "function") {
+          window.cashAddIncome(500, "Flower Haus Cover");
         }
-      );
+      });
     };
 
     window.startPaulDialogue = function () {
       startDialogue(PAUL_ACCEPT_DIALOGUE, "Paul", function () {
-        window.paulJobActive = true;
+        window.paulJobActive   = true;
         window.paulJobComplete = false;
+        window.resetDesignStats && window.resetDesignStats();
       });
     };
 
@@ -1564,8 +1821,9 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
 
     window.startAprilDialogue = function () {
       startDialogue(APRIL_ACCEPT_DIALOGUE, "April", function () {
-        window.aprilJobActive = true;
+        window.aprilJobActive   = true;
         window.aprilJobComplete = false;
+        window.resetDesignStats && window.resetDesignStats();
       });
     };
 
@@ -1580,8 +1838,9 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
 
     window.startTanakaDialogue = function () {
       startDialogue(TANAKA_ACCEPT_DIALOGUE, "Ikko Tanaka", function () {
-        window.tanakaJobActive = true;
+        window.tanakaJobActive   = true;
         window.tanakaJobComplete = false;
+        window.resetDesignStats && window.resetDesignStats();
       });
     };
 
@@ -1593,79 +1852,95 @@ if (!handled && window.tanakaJobActive && !window.tanakaJobComplete) {
         }
       });
     };
+
+    // ---------- FAIL DIALOGUES WITH HINTS ----------
+    window.startFlowerHausFailDialogue = function (remaining, isFinal) {
+      const hintText = isFinal
+        ? "We’ve tried a few versions now, so I’m going to reset the brief. Next time, make sure you experiment with at least three different tools in the design app before you upload."
+        : `We’re not quite there yet. Try using at least three different tools on the cover — brush, shapes, text, assets, lines… really explore the interface. You have ${remaining} more attempt(s) before I reset the brief.`;
+
+      const script = [
+        {
+          face: "./assets/ui/IMG_0212.jpg",
+          text: "Hmm, this version of the Flower Haus cover isn’t quite working yet."
+        },
+        {
+          face: "./assets/ui/IMG_0213.jpg",
+          text: hintText
+        }
+      ];
+      startDialogue(script, "Griffin Flowers");
+    };
+
+    window.startPaulFailDialogue = function (remaining, isFinal) {
+      const hintText = isFinal
+        ? "Let’s reset this project. When you try again, avoid the freehand pen, pick exactly three colors, and keep them in a clean geometric relationship."
+        : `This logo still isn’t quite right. Remember: don’t use the Pen tool, and limit yourself to exactly three colors that are evenly spaced — a strong triad. You have ${remaining} more attempt(s) left.`;
+
+      const script = [
+        {
+          face: "./assets/ui/Paul_1.png",
+          text: "This version doesn’t quite have the structure I’m looking for."
+        },
+        {
+          face: "./assets/ui/Paul_2.png",
+          text: "Think in terms of geometry and clarity. No loose, freehand drawing for this one."
+        },
+        {
+          face: "./assets/ui/Paul_3.png",
+          text: hintText
+        }
+      ];
+      startDialogue(script, "Paul");
+    };
+
+    window.startAprilFailDialogue = function (remaining, isFinal) {
+      const hintText = isFinal
+        ? "I’m going to reset the brief so you can start fresh. Next time, place at least three assets and keep your colors close together, like neighbors on the spectrum."
+        : `We’re close, but the poster isn’t quite capturing the show yet. Try using analogous colors — hues that sit near each other — and make sure you place at least three assets. You have ${remaining} more attempt(s) left.`;
+
+      const script = [
+        {
+          face: "./assets/ui/April_1.png",
+          text: "This version doesn’t feel as cohesive or experimental as I’d like."
+        },
+        {
+          face: "./assets/ui/April_2.png",
+          text: "Push the layout, but keep the color story tight and related."
+        },
+        {
+          face: "./assets/ui/April_3.png",
+          text: hintText
+        }
+      ];
+      startDialogue(script, "April");
+    };
+
+    window.startTanakaFailDialogue = function (remaining, isFinal) {
+      const hintText = isFinal
+        ? "I will reset the brief so you can rethink the composition. Next time, keep the palette focused on a warm + cool contrast, use no more than a single asset, and choose a clear sans serif typeface."
+        : `The poster still needs more clarity. Try combining one warm color with one cool color, use no more than one asset, and make sure your type uses a sans serif font. You have ${remaining} attempt(s) left.`;
+
+      const script = [
+        {
+          face: "./assets/ui/IMG_0249.jpg",
+          text: "This version of the poster doesn’t yet have the balance and contrast I’m looking for."
+        },
+        {
+          face: "./assets/ui/IMG_0248.jpg",
+          text: "Think about calm geometry and a clear dialogue between warm and cool colors."
+        },
+        {
+          face: "./assets/ui/IMG_0247.jpg",
+          text: hintText
+        }
+      ];
+      startDialogue(script, "Ikko Tanaka");
+    };
   })();
 </script>
 
 
-
-  <!-- Asset browser wiring: asset_1–asset_20 -->
-  <script>
-  (function () {
-    const openBtn     = document.getElementById('open-assets');
-    const win         = document.getElementById('win-asset-browser');
-    const grid        = document.getElementById('asset-grid');
-    const filterInput = document.getElementById('asset-filter');
-
-    if (!openBtn || !win || !grid) return;
-
-    const ASSETS = Array.from({ length: 20 }, (_, i) => {
-      const n = i + 1;
-      return {
-        id:   'asset_' + n,
-        label: 'Asset ' + n,
-        url:  './assets/ui/asset_' + n + '.png',
-        tags: ['asset']
-      };
-    });
-
-    function renderAssets() {
-      const term = (filterInput?.value || '').toLowerCase();
-      grid.innerHTML = '';
-
-      ASSETS
-        .filter(a =>
-          !term ||
-          a.label.toLowerCase().includes(term) ||
-          (a.tags || []).some(t => t.toLowerCase().includes(term))
-        )
-        .forEach(asset => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'asset-tile';
-          btn.innerHTML = `
-            <div class="asset-thumb">
-              <img src="${asset.url}" alt="${asset.label}">
-            </div>
-            <div class="asset-label">${asset.label}</div>
-          `;
-
-          btn.addEventListener('click', () => {
-            if (typeof window.addStickerFromURL === 'function') {
-              window.addStickerFromURL(asset.url);
-            } else if (typeof window.addStickerImage === 'function') {
-              const img = new Image();
-              img.onload = () => window.addStickerImage(img);
-              img.src = asset.url;
-            }
-          });
-
-          grid.appendChild(btn);
-        });
-    }
-
-    function openWindow() {
-      win.classList.remove('hidden');
-      win.style.display = 'block';
-      renderAssets();
-
-      // Always bring asset window to front
-      win.style.zIndex = 99999;
-    }
-
-    openBtn.addEventListener('click', openWindow);
-    filterInput?.addEventListener('input', renderAssets);
-  })();
-  </script>
 
   <!-- Slider also controls selected sticker scale -->
   <script>
