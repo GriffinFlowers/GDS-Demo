@@ -28,7 +28,6 @@
     <!-- Monitor background image -->
     <img class="monitor" src="./assets/ui/computer_base.png" alt="computer base" />
 
-    <!-- The 'screen' area where desktop icons + windows live -->
     <div class="screen" id="screen">
       <!-- Dock icons -->
       <div class="dock">
@@ -1224,28 +1223,40 @@ function setTool(name){
     return unique.size >= 3;
   }
 
-  // PAUL: cannot use Pen; exactly 3 colors; colors roughly triadic
-  function evaluatePaulDesign() {
-    const hot   = getHot();
-    const tools = hot.usedToolsArr        || [];
-    const idxs  = hot.usedColorIndicesArr || [];
+  // PAUL: cannot use Pen; must use one of three exact color triads
+// Triads are defined using swatch indices:
+// 0 = red, 1 = orange, 2 = yellow, 3 = green, 4 = blue, 6 = purple
+function evaluatePaulDesign() {
+  const hot   = getHot();
+  const tools = hot.usedToolsArr        || [];
+  const idxs  = hot.usedColorIndicesArr || [];
 
-    // 1) No Pen
-    if (tools.includes('pen')) return false;
+  // 1) No Pen tool allowed
+  if (tools.includes('pen')) return false;
 
-    // 2) Exactly 3 distinct colors
-    const unique = [...new Set(idxs)];
-    if (unique.length !== 3) return false;
+  // 2) Exactly 3 distinct colors used
+  const unique = [...new Set(idxs)];
+  if (unique.length !== 3) return false;
 
-    // 3) Triadic-ish on a 12-step wheel (indices 0–11)
-    const pos = unique.map(i => i % 12).sort((a,b) => a - b);
-    const d1 = (pos[1] - pos[0] + 12) % 12;
-    const d2 = (pos[2] - pos[1] + 12) % 12;
-    const d3 = (pos[0] - pos[2] + 12) % 12;
+  // sort so order doesn't matter
+  const sorted = unique.slice().sort((a, b) => a - b);
 
-    const ok = d => d >= 3 && d <= 5; // loose-ish triad
-    return ok(d1) && ok(d2) && ok(d3);
-  }
+  // Allowed triads by swatch index:
+  // (red, blue, yellow)          -> [0, 2, 4]
+  // (purple, green, orange)      -> [1, 3, 6]
+  // (yellow, purple, orange)     -> [1, 2, 6]
+  const allowedTriads = [
+    [0, 2, 4],
+    [1, 3, 6],
+    [1, 2, 6]
+  ];
+
+  return allowedTriads.some(triad =>
+    triad.length === sorted.length &&
+    triad.every((v, i) => v === sorted[i])
+  );
+}
+
 
   // APRIL: analogous colors + at least 3 assets
   function evaluateAprilDesign() {
@@ -2093,13 +2104,27 @@ function setTool(name){
       
         // 🔹 UPDATE THESE PATHS / LABELS TO MATCH YOUR REAL ASSET FILES
         const ASSETS = [
+          { label: '', url: './assets/ui/asset_8.png' },
+          { label: '', url: './assets/ui/asset_9.png' },
+          { label: '', url: './assets/ui/asset_10.png' },
+          { label: '', url: './assets/ui/asset_11.png' },
+          { label: '', url: './assets/ui/asset_12.png' },
+          { label: '', url: './assets/ui/asset_13.png' },
           { label: '', url: './assets/ui/asset_3.png' },
-          { label: 'Rounded shape 2', url: './assets/stickers/shape_02.png' },
-          { label: 'Flower 1',        url: './assets/stickers/flower_01.png' },
-          { label: 'Flower 2',        url: './assets/stickers/flower_02.png' },
-          { label: 'Star',            url: './assets/stickers/star_01.png' },
-          { label: 'Texture block',   url: './assets/stickers/texture_01.png' }
-          // add as many as you like…
+          { label: '', url: './assets/ui/asset_4.png' },
+          { label: '', url: './assets/ui/asset_5.png' },
+          { label: '', url: './assets/ui/asset_6.png' },
+          { label: '', url: './assets/ui/asset_7.png' },
+          { label: '', url: './assets/ui/asset_14.png' },
+          { label: '', url: './assets/ui/asset_15.png' },
+          { label: '', url: './assets/ui/asset_16.png' },
+          { label: '', url: './assets/ui/asset_17.png' },
+          { label: '', url: './assets/ui/asset_18.png' },
+          { label: '', url: './assets/ui/asset_19.png' },
+          { label: '', url: './assets/ui/asset_20.png' },
+          { label: '', url: './assets/ui/asset_21.png' },
+          { label: '', url: './assets/ui/asset_22.png' }
+          
         ];
       
         function renderGrid(filterText = '') {
