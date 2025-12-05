@@ -1601,17 +1601,17 @@ function setTool(name){
     // ---------- FLOWER HAUS (Griffin) ----------
     const FLOWER_HAUS_BRIEF_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0211.jpg",
+        face: "./assets/ui/IMG_0253.png",
         text:
           "Hey! Thanks for accepting my brief. I know its short notice but this magazine is my love letter to Graphic Design and I need it to be perfect."
       },
       {
-        face: "./assets/ui/IMG_0212.jpg",
+        face: "./assets/ui/IMG_0212.png",
         text:
           "I know this is your first job so I'm going to keep things real simple, by giving you complete creative freedom. Don't get used to this though, most clients will be a lot more picky!"
       },
       {
-        face: "./assets/ui/IMG_0213.jpg",
+        face: "./assets/ui/IMG_0256.png",
         text:
           "You can experiment with every color scheme and design principle and tool available. Before you submit make sure you spend some time brushing up on the basics in the Web search app. Let’s make this cover iconic."
       }
@@ -1619,17 +1619,17 @@ function setTool(name){
 
     const FLOWER_HAUS_COMPLETE_DIALOGUE = [
       {
-        face: "./assets/ui/IMG_0212.jpg",
+        face: "./assets/ui/IMG_0212.png",
         text:
           "Whoa, that cover looks incredible. It really feels like Flower Haus has its own voice now."
       },
       {
-        face: "./assets/ui/IMG_0213.jpg",
+        face: "./assets/ui/IMG_0256.png",
         text:
           "You nailed the hierarchy and the palette feels so cohesive. This is exactly what I was hoping for."
       },
       {
-        face: "./assets/ui/IMG_0211.jpg",
+        face: "./assets/ui/IMG_0253.png",
         text:
           "I’ve sent over your payment for the job! Consider this cover officially approved. Can’t wait to work with you again."
       }
@@ -2063,7 +2063,89 @@ function setTool(name){
       `;
     })();
   </script>
-  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const assetBtn = document.getElementById('open-assets');
+      const assetWin = document.getElementById('win-asset-browser');
+      if (!assetBtn || !assetWin) return;
+    
+      assetBtn.addEventListener('click', () => {
+        // show the window
+        assetWin.classList.remove('hidden');
+        assetWin.style.display = 'block';
+    
+        // bring it to the front over other app windows
+        const wins = document.querySelectorAll('.win');
+        let maxZ = 10;
+        wins.forEach(w => {
+          const z = parseInt(getComputedStyle(w).zIndex || '10', 10);
+          if (z > maxZ) maxZ = z;
+        });
+        assetWin.style.zIndex = maxZ + 1;
+      });
+    });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const grid  = document.getElementById('asset-grid');
+        const input = document.getElementById('asset-filter');
+        if (!grid) return;
+      
+        // 🔹 UPDATE THESE PATHS / LABELS TO MATCH YOUR REAL ASSET FILES
+        const ASSETS = [
+          { label: '', url: './assets/ui/asset_3.png' },
+          { label: 'Rounded shape 2', url: './assets/stickers/shape_02.png' },
+          { label: 'Flower 1',        url: './assets/stickers/flower_01.png' },
+          { label: 'Flower 2',        url: './assets/stickers/flower_02.png' },
+          { label: 'Star',            url: './assets/stickers/star_01.png' },
+          { label: 'Texture block',   url: './assets/stickers/texture_01.png' }
+          // add as many as you like…
+        ];
+      
+        function renderGrid(filterText = '') {
+          const q = filterText.toLowerCase();
+          grid.innerHTML = '';
+      
+          ASSETS
+            .filter(a => !q || a.label.toLowerCase().includes(q))
+            .forEach(asset => {
+              const btn = document.createElement('button');
+              btn.className = 'asset-thumb';
+              btn.title = asset.label;
+      
+              const img = document.createElement('img');
+              img.src = asset.url;
+              img.alt = asset.label;
+      
+              const cap = document.createElement('div');
+              cap.className = 'asset-caption';
+              cap.textContent = asset.label;
+      
+              btn.appendChild(img);
+              btn.appendChild(cap);
+      
+              btn.addEventListener('click', () => {
+                if (typeof window.addStickerFromURL === 'function') {
+                  window.addStickerFromURL(asset.url);
+                } else {
+                  alert('addStickerFromURL() is missing – check the design engine script.');
+                }
+              });
+      
+              grid.appendChild(btn);
+            });
+        }
+      
+        // search/filter box
+        if (input) {
+          input.addEventListener('input', () => renderGrid(input.value));
+        }
+      
+        // first render
+        renderGrid();
+      });
+      </script>
+      
   
     
 </body>
